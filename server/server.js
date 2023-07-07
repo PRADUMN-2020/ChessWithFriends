@@ -43,7 +43,7 @@ app.get("/:id", (req, res) => {
 
 // test route
 
-app.get("/test", (req, res) => {
+app.get("/", (req, res) => {
   res.send("server started");
 });
 
