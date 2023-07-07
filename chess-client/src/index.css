@@ -1,0 +1,223 @@
+body {
+  background-color: #262626;
+  background-image: url("https://www.transparenttextures.com/patterns/asfalt-light.png");
+}
+
+#root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Initiator Screen */
+
+.initiator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-family: "Roboto", sans-serif;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  color: white;
+}
+
+.logo {
+  position: absolute;
+  top: 4.3%;
+  left: 25.2%;
+  width: 6%;
+}
+
+.branding {
+  font-weight: 900;
+  color: white;
+  font-size: 2.5rem;
+  font-family: "Playfair Display SC", serif;
+  letter-spacing: 0.1rem;
+}
+
+.description {
+  font-size: 0.9rem;
+  color: #818281;
+  font-weight: 100;
+}
+
+.url {
+  margin: 2% auto 0;
+  width: 20%;
+  height: 2%;
+  background-color: #393e46;
+  border-radius: 4px;
+}
+
+.url input {
+  background: transparent;
+  border: none;
+  color: white;
+}
+
+/* .btn {
+  background: linear-gradient(
+    135deg,
+    #9837ed,
+    #dd79e8,
+    #f2d3ea,
+    #91e3fa,
+    #baffcf
+  );
+} */
+
+.waiting {
+  font-size: 0.9rem;
+  height: 0.9rem;
+}
+
+.socials {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  color: white;
+  margin: 4% auto 4%;
+}
+
+.socials a {
+  margin: 5% 10% 5%;
+}
+
+.social-icon {
+  color: #818281;
+}
+
+.social-icon:hover {
+  transition: 0.2s ease;
+}
+
+.fa-twitter:hover {
+  color: #49d3f2;
+}
+
+.fa-linkedin-in:hover {
+  color: #0c9af2;
+}
+.fa-envelope:hover {
+  color: white;
+}
+.fa-discord:hover {
+  color: #df54f7;
+}
+
+.copyright {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 100;
+  font-size: 0.7rem;
+  color: #818281;
+  margin-bottom: 2%;
+}
+
+/* Game UI */
+
+.game-ui {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 0;
+  margin: 1% 0;
+}
+
+.board {
+  font-weight: 900;
+  color: white;
+  font-size: 1rem;
+  font-family: "Playfair Display SC", serif;
+  letter-spacing: 2px;
+  width: 35%;
+}
+
+.video-chat > video {
+  background-color: #000000;
+  width: 55%;
+  height: 165px;
+  box-shadow: 0px 5px 10px black;
+  margin: 10px;
+  border-radius: 5px;
+}
+.video-chat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.chat-section {
+  background-color: #363636;
+  background-image: url("https://www.transparenttextures.com/patterns/xv.png");
+  box-shadow: 0px 5px 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: centre;
+  justify-content: centre;
+  border-radius: 5px;
+  width: 35%;
+  padding: 1% 0 1% 0;
+  margin: 0;
+}
+
+.chat-controls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0% 2%;
+  border-radius: 5px;
+}
+
+.control-icon {
+  color: white;
+  border-radius: 50%;
+  padding: 8px;
+}
+
+/* Room Full Page */
+
+.room-full {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: "Poppins", sans-serif;
+  font-size: 1.5rem;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  color: white;
+  letter-spacing: 2px;
+}
+
+.room-full p {
+  margin: 0 0 2%;
+}
+
+.animation {
+  margin-top: 2%;
+  width: 25%;
+}
+
+/* Modals */
+
+.modal-style {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0px 0px 15px black;
+  background-color: #2a2b2b;
+  color: white;
+  text-align: center;
+  font-family: "Montserrat", sans-serif;
+  border-radius: 5px;
+}

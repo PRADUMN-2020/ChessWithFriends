@@ -1,0 +1,85 @@
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import socket from "../socketLogic";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import copy from "clipboard-copy";
+import IconButton from "@mui/material/IconButton";
+import HorizontalToggleBtn from "./HorizontalToggleBtn";
+import CustomButton from "./CustomButton";
+import Footer from "./Footer";
+
+function InitiatorScreen({ handleUser }) {
+  const [selectedColor, setSelectedColor] = useState("black");
+  const clicked = useRef(false);
+  const [gameUrl, setGameUrl] = useState("");
+  const navigate = useNavigate();
+  const roomId = useRef(""); // to store the give room Id.
+
+  const Redirect = () => {
+    navigate("/" + roomId.current); // Redirect to a specific game UI room
+  };
+
+  useEffect(() => {
+    // when room is created set roomId and game url.
+    socket.on("room created", (Id) => {
+      roomId.current = Id;
+      setGameUrl(process.env.REACT_APP_SERVER_URI + "/" + Id);
+    });
+    // to redirect the host to game ui once the guest joins
+    socket.on("redirect host", () => {
+      Redirect();
+    });
+  }, []);
+
+  // to set the user as host and order server to create a new room.
+
+  function handleClick(event) {
+    if (!clicked.current) {
+      handleUser("host");
+      socket.emit("create room", selectedColor);
+      clicked.current = true;
+    }
+  }
+  // to handle the copy url
+  function handleCopy() {
+    copy(gameUrl);
+  }
+  // set the selected color.
+  function handleChange(color) {
+    setSelectedColor(color);
+  }
+
+  return (
+    <div className="initiator">
+      <img src="assets/pieces/queen.png" alt="logo" className="logo" />
+      <h1 className="branding">Chess with Friends</h1>
+      <h2 className="description">
+        Generate game URL and share with friend to Start game
+      </h2>
+
+      <HorizontalToggleBtn
+        handleChange={handleChange}
+        selectedColor={selectedColor}
+      />
+
+      <CustomButton
+        onClick={handleClick}
+        text="Generate Game URL"
+        width="25%"
+      />
+
+      <div className="url">
+        <input value={gameUrl} placeholder="Get Game URL here"></input>
+        <IconButton aria-label="copy" onClick={handleCopy}>
+          <ContentCopyIcon style={{ color: "white" }} />
+        </IconButton>
+      </div>
+      <p className="waiting">
+        {gameUrl && "Waiting for your Friend to join..."}
+      </p>
+      <Footer />
+    </div>
+  );
+}
+
+export default InitiatorScreen;

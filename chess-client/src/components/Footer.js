@@ -1,0 +1,29 @@
+import React from "react";
+
+function Footer() {
+  const currentYear = new Date().getFullYear();
+  return (
+    <div>
+      <div className="socials">
+        <a href="https://www.linkedin.com/in/pradumn-prasad/">
+          <i className="fa-brands fa-linkedin-in fa-lg social-icon "></i>
+        </a>
+        <a href="https://twitter.com/PradumnPrasad7">
+          <i className="fa-brands fa-twitter fa-lg social-icon "></i>
+        </a>
+
+        <a href="mailto:pradumnprasad883@gmail.com">
+          <i className="fa-solid fa-envelope fa-lg social-icon "></i>
+        </a>
+        <a href="https://example.com">
+          <i className="fa-brands fa-discord fa-lg social-icon "></i>
+        </a>
+      </div>
+      <div className="copyright">
+        Chess with Friends &copy; {currentYear} Pradumn
+      </div>
+    </div>
+  );
+}
+
+export default Footer;
