@@ -122,12 +122,15 @@ const VideoChat = ({ user, roomId }) => {
     <div className="video-chat">
       {/* remote client's video */}
       <video ref={(ref) => ref && (ref.srcObject = remoteStream)} autoPlay />
+      <p className="player">Opponent</p>
+
       {/* local client's video */}
       <video
         ref={(ref) => ref && (ref.srcObject = localStream)}
         autoPlay
         muted
       />
+      <p className="player">You</p>
       <div className="chat-controls">
         <IconButton
           aria-label="mute"

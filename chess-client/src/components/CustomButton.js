@@ -14,7 +14,7 @@ const CustomButton = ({ text, onClick, width }) => {
         borderBottom: "4px solid green",
         width: width,
         padding: "1% 0",
-        fontSize: "1rem",
+        fontSize: "1.1rem",
         fontFamily: "Montserrat",
         margin: "2% auto",
         textShadow: "1px 1px 1px #474747",

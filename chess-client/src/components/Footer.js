@@ -6,17 +6,17 @@ function Footer() {
     <div>
       <div className="socials">
         <a href="https://www.linkedin.com/in/pradumn-prasad/">
-          <i className="fa-brands fa-linkedin-in fa-lg social-icon "></i>
+          <i className="fa-brands fa-linkedin-in fa-xl social-icon "></i>
         </a>
         <a href="https://twitter.com/PradumnPrasad7">
-          <i className="fa-brands fa-twitter fa-lg social-icon "></i>
+          <i className="fa-brands fa-twitter fa-xl social-icon "></i>
         </a>
 
         <a href="mailto:pradumnprasad883@gmail.com">
-          <i className="fa-solid fa-envelope fa-lg social-icon "></i>
+          <i className="fa-solid fa-envelope fa-xl social-icon "></i>
         </a>
         <a href="https://example.com">
-          <i className="fa-brands fa-discord fa-lg social-icon "></i>
+          <i className="fa-brands fa-discord fa-xl social-icon "></i>
         </a>
       </div>
       <div className="copyright">

@@ -28,7 +28,9 @@ export default function VerdictModal({ open, onClose }) {
             <CloseIcon />
           </IconButton>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Room does not exist. Create new room at Home.
+            <p style={{ margin: "0 0 2%" }}>
+              Room does not exist. Create new room at Home.
+            </p>
             <CustomButton onClick={onClose} text="Go to Home" width="40%" />
           </Typography>
         </Box>

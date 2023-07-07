@@ -9,7 +9,9 @@ export default function HorizontalToggleBtn({ selectedColor, handleChange }) {
   const btnStyle = {
     fontFamily: "Montserrat",
     margin: "0",
+    fontSize: "0.9rem",
     textShadow: "2px 2px 2px #474747",
+    // textShadow: "2px 2px 2px black",
   };
   const onSelectStyle = {
     border: "4px solid #262626",
@@ -37,8 +39,8 @@ export default function HorizontalToggleBtn({ selectedColor, handleChange }) {
       >
         <img
           src="/assets/pieces/p_b.png"
-          height="25px"
-          width="25px"
+          height="30px"
+          width="30px"
           alt="black pawn"
         />
         {"  "}
@@ -58,8 +60,8 @@ export default function HorizontalToggleBtn({ selectedColor, handleChange }) {
         White{"  "}
         <img
           src="/assets/pieces/p_w.png"
-          height="25px"
-          width="25px"
+          height="30px"
+          width="30px"
           alt="white pawn"
         />
       </ToggleButton>
