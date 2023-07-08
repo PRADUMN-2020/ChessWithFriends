@@ -51,8 +51,10 @@ function InitiatorScreen({ handleUser }) {
 
   return (
     <div className="initiator">
-      <img src="assets/pieces/queen.png" alt="logo" className="logo" />
-      <h1 className="branding">Chess with Friends</h1>
+      <h1 className="branding">
+        <img src="assets/pieces/queen.png" alt="logo" className="logo" />
+        Chess with Friends
+      </h1>
       <h2 className="description">
         Generate game URL and share with friend to Start game
       </h2>
