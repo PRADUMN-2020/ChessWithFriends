@@ -256,6 +256,7 @@ io.on("connection", (socket) => {
   // for handling the videochat intial signalling(before establishing a peer to peer connection).
   socket.on("signal", ({ data, roomId }) => {
     // Broadcast signaling data to appropriate recipient
+    console.log(data);
     socket.broadcast.to(roomId).emit("signal", data);
   });
 });
