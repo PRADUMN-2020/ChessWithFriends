@@ -149,7 +149,7 @@ const ChessboardComponent = ({ roomId, user }) => {
   }, [squareData]);
 
   return (
-    <div className="board col-lg-6 p-5">
+    <div className="board col-lg-6 px-5">
       {/* to show the plays color */}
       <h1>Your Color: {playerColor === "white" ? "White" : "Black"}</h1>
       <Chessboard
