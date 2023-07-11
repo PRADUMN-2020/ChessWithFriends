@@ -17,7 +17,7 @@ export default function QuitModal({ open, onClose, looser }) {
         onClose={onClose}
         aria-labelledby="show winner"
         aria-describedby="winner"
-        disableBackdropClick
+        // disableBackdropClick
       >
         <Box sx={style} className="modal-style">
           <IconButton

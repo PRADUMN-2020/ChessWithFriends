@@ -1,62 +1,79 @@
 body {
   background-color: #262626;
   background-image: url("https://www.transparenttextures.com/patterns/asfalt-light.png");
+  width: 99vw;
+  height: 100vh;
 }
 
 #root {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: inherit;
+  height: inherit;
+}
+
+/* Scrollbar Design*/
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #595958;
+  border-radius: 20px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #6b6b6a;
 }
 
 /* Initiator Screen */
 
 .initiator {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  font-family: "Roboto", sans-serif;
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: column;
+  font-family: "Roboto", sans-serif;
+  font-size: 1rem;
+  font-weight: 100;
   text-align: center;
   color: white;
 }
 
-.logo {
-  position: absolute;
-  left: 26.5%;
-  top: 4.2%;
-  width: 6%;
-}
-
 .branding {
   font-weight: 900;
-  color: white;
-  font-size: 2.6rem;
+  font-size: 3rem;
+  /* font-family: "Poppins", sans-serif; */
   font-family: "Playfair Display SC", serif;
   letter-spacing: 0.1rem;
 }
 
 .description {
-  font-size: 1rem;
   color: #818281;
-  font-weight: 100;
+  font-size: 1rem;
 }
 
 .url {
   margin: 2% auto 0;
-  width: 20%;
   background-color: #393e46;
   border-radius: 4px;
+  padding: 0.2% 1.5%;
 }
 
 .url input {
   background: transparent;
   width: 75%;
-  font-size: 1rem;
   border: none;
   color: white;
+  margin-right: 4%;
 }
 
 /* .btn {
@@ -71,21 +88,18 @@ body {
 } */
 
 .waiting {
-  font-size: 1rem;
-  margin: 2% auto 1.5%;
+  margin: 2% auto 2%;
   height: 1rem;
 }
 
 .socials {
   display: flex;
-  align-items: center;
   justify-content: space-evenly;
-  color: white;
   margin: 2% auto 4%;
 }
 
 .socials a {
-  margin: 5% 10% 5%;
+  margin: 5% 10%;
 }
 
 .social-icon {
@@ -111,10 +125,6 @@ body {
 }
 
 .copyright {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 100;
   font-size: 0.8rem;
   color: #818281;
   margin-bottom: 2%;
@@ -125,49 +135,47 @@ body {
 .game-ui {
   height: 100%;
   width: 100%;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  padding: 0;
-  margin: 1% 0;
 }
 
 .board {
-  font-weight: 900;
-  color: white;
-  font-size: 1.1rem;
-  font-family: "Playfair Display SC", serif;
-  letter-spacing: 2px;
-  width: 36%;
+  margin: auto;
 }
 
-.video-chat > video {
-  background-color: #000000;
-  width: 51%;
-  height: 169px;
-  box-shadow: 0px 5px 10px black;
-  margin: 10px;
-  border-radius: 5px;
-}
-.video-chat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
+.board h1 {
+  font-size: 2rem;
+  /* font-family: "Poppins", sans-serif; */
+  font-family: "Montserrat", sans-serif;
+  font-weight: 900;
+  letter-spacing: 2px;
+  padding-bottom: 5%;
+  color: white;
+  text-shadow: 2px 2px 10px black;
 }
 
 .chat-section {
+  margin: auto;
+}
+
+.chat-content {
   background-color: #363636;
   background-image: url("https://www.transparenttextures.com/patterns/xv.png");
-  box-shadow: 0px 5px 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: centre;
-  justify-content: centre;
+  box-shadow: 0px 5px 15px black;
+  border-radius: 10px;
+  text-align: center;
+  padding: 4% 0;
+}
+
+.video-chat {
+  padding-bottom: 2%;
+}
+
+.video {
+  background-color: #000000;
+  height: 28vh;
+  width: 17.5vw;
+  box-shadow: 0px 5px 15px black;
+  margin: 10px;
   border-radius: 5px;
-  width: 35%;
-  padding: 1% 0 1% 0;
-  margin: 0;
 }
 
 .player {
@@ -179,42 +187,36 @@ body {
 }
 
 .chat-controls {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 0% 2%;
-  border-radius: 5px;
+  padding: 2%;
 }
 
 .control-icon {
   color: white;
   border-radius: 50%;
-  padding: 8px;
 }
 
 /* Room Full Page */
 
 .room-full {
+  height: 100%;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   font-family: "Poppins", sans-serif;
   font-size: 1.5rem;
-  height: 100%;
-  width: 100%;
   text-align: center;
   color: white;
   letter-spacing: 2px;
 }
 
 .room-full p {
-  margin: 0 0 2%;
+  margin: 0 0 50px;
 }
 
 .animation {
-  margin-top: 2%;
-  width: 25%;
+  width: 300px;
 }
 
 /* Modals */
@@ -226,8 +228,21 @@ body {
   transform: translate(-50%, -50%);
   box-shadow: 0px 0px 15px black;
   background-color: #2a2b2b;
-  color: white;
   text-align: center;
   font-family: "Montserrat", sans-serif;
+  color: white;
   border-radius: 5px;
+}
+
+@media (max-width: 1188px) {
+  .board h1 {
+    font-size: 2rem;
+    font-family: "Poppins", sans-serif;
+    font-weight: 900;
+    letter-spacing: 2px;
+    padding-bottom: 5%;
+    color: white;
+    text-align: center;
+    text-shadow: 2px 2px 10px black;
+  }
 }

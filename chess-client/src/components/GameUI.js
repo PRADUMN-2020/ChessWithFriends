@@ -73,25 +73,33 @@ function GameUI({ user }) {
       verdictRef.current = verdict;
       setShowVerdict(true);
     });
+    return () => {
+      socket.off("verdict");
+      socket.off("show quit modal");
+      socket.off("room expired");
+    };
   }, []);
 
   return (
-    <div style={{ width: "100%", height: "100%" }}>
-      <div className="game-ui">
+    <div className="container" style={{ width: "100%", height: "100%" }}>
+      <div className="game-ui my-4 row">
         {/* pass the room id and user type to chessboard comp */}
         <ChessboardComponent user={user} roomId={roomId.current} />
-        <div className="chat-section">
-          {/* pass user type and room id to VideoChat comp */}
-          <VideoChat user={user} roomId={roomId.current} />
-          <CustomButton
-            className="quit-btn"
-            onClick={() => {
-              // how quit confirmation modal once quit button is clicked.
-              setQuitCnf(true);
-            }}
-            text="Quit"
-            width="40%"
-          />
+        <div className="col-lg-6 chat-section p-5">
+          <div className="chat-content">
+            {/* pass user type and room id to VideoChat comp */}
+
+            <VideoChat user={user} roomId={roomId.current} />
+            <CustomButton
+              className="quit-btn"
+              onClick={() => {
+                // how quit confirmation modal once quit button is clicked.
+                setQuitCnf(true);
+              }}
+              text="Quit"
+              // width="40%"
+            />
+          </div>
         </div>
       </div>
 

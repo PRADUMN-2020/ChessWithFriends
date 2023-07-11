@@ -4,7 +4,6 @@ import { Modal, Grid, Button, Typography, Box } from "@mui/material";
 const promotionOptions = ["Queen", "Rook", "Bishop", "Knight"];
 
 const style = {
-  width: "35%",
   p: 4,
 };
 
@@ -42,11 +41,11 @@ export default function PromotionModal({ open, onClose, promote }) {
         onClose={onClose}
         aria-labelledby="Promote to"
         aria-describedby="Queen Rook Bishop Knight"
-        disableBackdropClick
+        // disableBackdropClick
       >
         <Box sx={style} className="modal-style">
           <Typography id="title" variant="h6" component="h2">
-            Select a promotion piece:
+            Select a piece:
           </Typography>
           <Grid container spacing={2}>
             {promotionOptions.map((option) => (
@@ -54,11 +53,11 @@ export default function PromotionModal({ open, onClose, promote }) {
                 <Button
                   style={{
                     marginTop: "10%",
-                    backgroundColor: "#baed91",
+                    backgroundColor: "#40e667",
                     border:
                       selectedOption === givePiece(option)
-                        ? "4px solid orange"
-                        : "4px solid #baed91",
+                        ? "4px solid #edf21d"
+                        : "4px solid #40e667",
                   }}
                   variant="outlined"
                   onClick={() => handleOptionSelect(option)}
@@ -66,7 +65,6 @@ export default function PromotionModal({ open, onClose, promote }) {
                 >
                   <img
                     src={`assets/pieces/${givePiece(option)}_b.png`}
-                    width="60px"
                     alt={option}
                   />
                 </Button>
@@ -75,7 +73,7 @@ export default function PromotionModal({ open, onClose, promote }) {
           </Grid>
           <Button
             style={{
-              marginTop: "40px",
+              marginTop: "45px",
               width: "75%",
             }}
             variant="contained"

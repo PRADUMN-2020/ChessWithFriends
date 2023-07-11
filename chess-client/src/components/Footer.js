@@ -4,7 +4,7 @@ function Footer() {
   const currentYear = new Date().getFullYear();
   return (
     <div>
-      <div className="socials">
+      <div className="socials container-fluid">
         <a href="https://www.linkedin.com/in/pradumn-prasad/">
           <i className="fa-brands fa-linkedin-in fa-xl social-icon "></i>
         </a>

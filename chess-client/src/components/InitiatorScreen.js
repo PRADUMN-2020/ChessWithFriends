@@ -29,6 +29,10 @@ function InitiatorScreen({ handleUser }) {
     socket.on("redirect host", () => {
       Redirect();
     });
+    return () => {
+      socket.off("room created");
+      socket.off("redirect host");
+    };
   }, []);
 
   // to set the user as host and order server to create a new room.
@@ -50,9 +54,9 @@ function InitiatorScreen({ handleUser }) {
   }
 
   return (
-    <div className="initiator">
-      <h1 className="branding">
-        <img src="assets/pieces/queen.png" alt="logo" className="logo" />
+    <div className="initiator container-fluid">
+      <h1 className="branding pt-4 pb-1">
+        {/* <img src="assets/pieces/queen.png" alt="logo" className="logo" /> */}
         Chess with Friends
       </h1>
       <h2 className="description">
@@ -67,7 +71,7 @@ function InitiatorScreen({ handleUser }) {
       <CustomButton
         onClick={handleClick}
         text="Generate Game URL"
-        width="25%"
+        // width="25%"
       />
 
       <div className="url">

@@ -17,7 +17,9 @@ function RoomFull() {
         <Lottie animationData={Astronaut} />
       </div>
       <p>Room is full, create new room url at home.</p>
-      <CustomButton text="Go to Home" onClick={handleClick} width="20%" />
+      <CustomButton text="Go to Home" onClick={handleClick} 
+      // width="20%"
+       />
     </div>
   );
 }

@@ -53,7 +53,7 @@ io.on("connection", (socket) => {
   // console.log("A user connected");
   // create a room when host emits create room with a selected color.
   socket.on("create room", (selectedColor) => {
-    console.log("create room");
+    // console.log("create room");
     const roomId = uuidv4(); // generate unique room Id
     const gameState = new Chess(); // create new instace of chess game
     // set the room data
@@ -168,7 +168,7 @@ io.on("connection", (socket) => {
     let checkStyles = {};
     let moveStyle = {
       // set styles to high light the piece move
-      [move.from]: { background: "#9cf24b" },
+      [move.from]: { background: "#4de35a" },
       [move.to]: { background: "#b6d91a" },
     };
 
@@ -222,8 +222,8 @@ io.on("connection", (socket) => {
     activePlayers.delete(hostId);
     activePlayers.delete(guestId);
     rooms.delete(roomId);
-    console.log(rooms);
-    console.log(activePlayers);
+    // console.log(rooms);
+    // console.log(activePlayers);
   }
 
   // listen to disconnect event when someone closes the tab or reloads and show the  quitter(looser) and delete the room and inactive players.

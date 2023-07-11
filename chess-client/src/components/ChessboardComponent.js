@@ -97,6 +97,11 @@ const ChessboardComponent = ({ roomId, user }) => {
       const audio = new Audio(moveSound); // play the audio
       audio.play();
     });
+    return () => {
+      socket.off("started game");
+      socket.off("square data");
+      socket.off("state");
+    };
   }, []);
 
   useEffect(() => {
@@ -144,7 +149,7 @@ const ChessboardComponent = ({ roomId, user }) => {
   }, [squareData]);
 
   return (
-    <div className="board">
+    <div className="board col-lg-6 p-5">
       {/* to show the plays color */}
       <h1>Your Color: {playerColor === "white" ? "White" : "Black"}</h1>
       <Chessboard
@@ -159,7 +164,7 @@ const ChessboardComponent = ({ roomId, user }) => {
           fontFamily: "Montserrat",
         }}
         customDarkSquareStyle={{
-          backgroundColor: "#649950",
+          backgroundColor: " #649950",
         }}
         customLightSquareStyle={{ backgroundColor: "#e7edd1" }}
         // customPieces={pieceTheme}

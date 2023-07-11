@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "@mui/material/Button";
 
-const CustomButton = ({ text, onClick, width }) => {
+const CustomButton = ({ text, onClick }) => {
   return (
     <Button
       onClick={onClick}
@@ -12,12 +12,12 @@ const CustomButton = ({ text, onClick, width }) => {
           bgcolor: "#69b304", // Set the hover background color
         },
         borderBottom: "4px solid green",
-        width: width,
-        padding: "1% 0",
+        padding: "1% 3%",
         fontSize: "1.1rem",
         fontFamily: "Montserrat",
         margin: "2% auto",
         textShadow: "1px 1px 1px #474747",
+        // boxShadow: "0px 5px 15px black",
         letterSpacing: "1px",
       }}
     >
