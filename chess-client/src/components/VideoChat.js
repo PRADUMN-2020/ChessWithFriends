@@ -50,10 +50,12 @@ const VideoChat = ({ user, roomId }) => {
     socket.on("started game", () => {
       // room created
       deleted.current = false;
+      console.log("room created ", deleted.current);
     });
     // destroy the peer and clean media stream
     socket.on("delete peer", () => {
       deleted.current = true; // room deleted
+      console.log("room deleted ", deleted.current);
       if (peerRef.current) {
         peerRef.current.destroy();
       }
@@ -76,7 +78,7 @@ const VideoChat = ({ user, roomId }) => {
           //  1. Peer Created
           peerRef.current = new Peer({
             initiator: user === "host",
-            trickle: false,
+            trickle: true,
             stream: stream,
           });
 
