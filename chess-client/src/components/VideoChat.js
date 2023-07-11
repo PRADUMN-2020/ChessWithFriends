@@ -16,7 +16,7 @@ const VideoChat = ({ user, roomId }) => {
   const mediaStream = useRef(null); // to store the mediastream.
   const localStream = useRef(null); // to store the remote stream
   const remoteStream = useRef(null); // to store the local stream
-  const deleted = useRef(false); // to store weather the room is deleted
+  const deleted = useRef(true); // to store weather the room is deleted
 
   function handleAudio() {
     // function to toogle the audio on and off
@@ -47,9 +47,13 @@ const VideoChat = ({ user, roomId }) => {
   }
 
   useEffect(() => {
+    socket.on("started game", () => {
+      // room created
+      deleted.current = false;
+    });
     // destroy the peer and clean media stream
     socket.on("delete peer", () => {
-      deleted.current = true;
+      deleted.current = true; // room deleted
       if (peerRef.current) {
         peerRef.current.destroy();
       }
@@ -72,7 +76,7 @@ const VideoChat = ({ user, roomId }) => {
           //  1. Peer Created
           peerRef.current = new Peer({
             initiator: user === "host",
-            trickle: true,
+            trickle: false,
             stream: stream,
           });
 
@@ -103,14 +107,12 @@ const VideoChat = ({ user, roomId }) => {
 
     // Clean up resources on unmount
     return () => {
+      if (mediaStream.current)
+        // clear media stream
+        mediaStream.current.getTracks().forEach((track) => track.stop());
+
+      if (peerRef.current) peerRef.current.destroy(); // destroy peer
       if (!deleted.current) {
-        // is triggered when player leaves page without quitting
-        if (mediaStream.current)
-          // clear media stream
-          mediaStream.current.getTracks().forEach((track) => track.stop());
-
-        if (peerRef.current) peerRef.current.destroy(); // destroy peer
-
         socket.emit("quit", { rmId: roomId, user }); // if user leaves page emit quit
       }
       socket.off("signal"); // switch off signal

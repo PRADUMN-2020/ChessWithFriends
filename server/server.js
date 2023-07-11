@@ -216,7 +216,7 @@ io.on("connection", (socket) => {
   // function to delete the inactive players and room.
   function deleteRoom(socketId) {
     const roomId = activePlayers.get(socketId);
-    socket.broadcast.to(roomId).emit("delete peer"); // emit to destroy the socket io peer.
+    io.to(roomId).emit("delete peer"); // emit to destroy the socket io peer.
     const hostId = rooms.get(roomId).host.id;
     const guestId = rooms.get(roomId).guest.id;
     activePlayers.delete(hostId);
