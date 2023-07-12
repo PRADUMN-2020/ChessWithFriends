@@ -8,6 +8,7 @@ body {
 #root {
   width: inherit;
   height: inherit;
+  padding: 0;
 }
 
 /* Scrollbar Design*/

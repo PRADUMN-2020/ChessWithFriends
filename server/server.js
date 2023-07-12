@@ -229,6 +229,7 @@ io.on("connection", (socket) => {
   // listen to disconnect event when someone closes the tab or reloads and show the  quitter(looser) and delete the room and inactive players.
 
   socket.on("disconnect", () => {
+    console.log("socket disconnected");
     if (activePlayers.get(socket.id)) {
       const roomId = activePlayers.get(socket.id);
       const hostId = rooms.get(roomId).host.id;
@@ -246,6 +247,7 @@ io.on("connection", (socket) => {
   // listen to quit event when a client chosses to quit and emit the quitter(looser) and finally delete the room and inactive players.
 
   socket.on("quit", ({ rmId, user }) => {
+    console.log(user + " quits.");
     let looser = rooms.get(rmId)[user].color;
     if (looser === "white") looser = "White";
     else looser = "Black";
@@ -256,7 +258,7 @@ io.on("connection", (socket) => {
   // for handling the videochat intial signalling(before establishing a peer to peer connection).
   socket.on("signal", ({ data, roomId }) => {
     // Broadcast signaling data to appropriate recipient
-    console.log(data);
+    // console.log(data);
     socket.broadcast.to(roomId).emit("signal", data);
   });
 });

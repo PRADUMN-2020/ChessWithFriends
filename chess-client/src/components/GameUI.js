@@ -81,7 +81,10 @@ function GameUI({ user }) {
   }, []);
 
   return (
-    <div className="container" style={{ width: "100%", height: "100%" }}>
+    <div
+      className="container"
+      style={{ width: "100%", height: "100%", padding: "0" }}
+    >
       <div className="game-ui row">
         {/* pass the room id and user type to chessboard comp */}
         <ChessboardComponent user={user} roomId={roomId.current} />
