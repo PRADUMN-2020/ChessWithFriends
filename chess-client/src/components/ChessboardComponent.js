@@ -66,7 +66,7 @@ const ChessboardComponent = ({ roomId, user }) => {
 
   function getSquareData(square) {
     // to fetch the data for the selected square form the server
-    socket.emit("square data", { square: square });
+    socket.emit("square data", { square: square, roomId });
   }
 
   useEffect(() => {

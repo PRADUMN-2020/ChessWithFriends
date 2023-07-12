@@ -123,8 +123,7 @@ io.on("connection", (socket) => {
 
   //when square data event comes (when a square is selected) then fetch all the data of the square and send it to the corresponding client who emits the event.
 
-  socket.on("square data", ({ square }) => {
-    const roomId = activePlayers.get(socket.id); // get roomID
+  socket.on("square data", ({ square, roomId }) => {
     const game = rooms.get(roomId).gameState; // get game state from the room
     const possibleMoves = game.moves({ square, verbose: true }); // get the possible moves of a selected piece (if piece is selected)
     const piece = game.get(square); // get the piece if selected
