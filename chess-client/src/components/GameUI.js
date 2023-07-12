@@ -82,10 +82,10 @@ function GameUI({ user }) {
 
   return (
     <div className="container" style={{ width: "100%", height: "100%" }}>
-      <div className="game-ui my-5 row">
+      <div className="game-ui row">
         {/* pass the room id and user type to chessboard comp */}
         <ChessboardComponent user={user} roomId={roomId.current} />
-        <div className="col-lg-6 chat-section p-5">
+        <div className="chat-section col-lg-6 px-lg-5 py-5">
           <div className="chat-content">
             {/* pass user type and room id to VideoChat comp */}
 

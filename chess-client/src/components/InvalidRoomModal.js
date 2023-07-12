@@ -29,7 +29,7 @@ export default function InvalidRoomModal({ open, onClose }) {
           </IconButton>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             <p style={{ margin: "0 0 2vh" }}>
-              Room don't exist. Create new at Home.
+              Room was deleted. Create new at Home.
             </p>
             <CustomButton onClick={onClose} text="Go to Home" />
           </Typography>
