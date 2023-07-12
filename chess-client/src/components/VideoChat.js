@@ -78,7 +78,7 @@ const VideoChat = ({ user, roomId }) => {
           //  1. Peer Created
           peerRef.current = new Peer({
             initiator: user === "host",
-            trickle: false,
+            trickle: true,
             stream: stream,
           });
 
