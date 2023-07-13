@@ -14,7 +14,7 @@ function ShareButtons({ gameUrl }) {
   };
 
   return (
-    <div>
+    <div className="share-url">
       <p className="share-text">Share Game URL</p>
       <div className="share-buttons-container">
         <button
@@ -24,8 +24,8 @@ function ShareButtons({ gameUrl }) {
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="25"
-            height="25"
+            width="16"
+            height="16"
             fill="currentColor"
             class="bi bi-whatsapp"
             viewBox="0 0 16 16"
@@ -41,8 +41,8 @@ function ShareButtons({ gameUrl }) {
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="25"
-            height="25"
+            width="16"
+            height="16"
             fill="currentColor"
             class="bi bi-telegram"
             viewBox="0 0 16 16"

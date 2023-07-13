@@ -85,6 +85,7 @@ body {
   margin: 0;
   display: flex;
   align-items: center;
+  flex-direction: column;
   justify-content: space-evenly;
   background: linear-gradient(-45deg, black, #565759);
   border-radius: 2px;

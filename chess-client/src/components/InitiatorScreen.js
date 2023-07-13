@@ -81,9 +81,8 @@ function InitiatorScreen({ handleUser }) {
           <ContentCopyIcon style={{ color: "white" }} />
         </IconButton>
       </div>
-      <div className="share-url">
-        {gameUrl && <ShareButtons gameUrl={gameUrl} />}
-      </div>
+
+      {gameUrl && <ShareButtons gameUrl={gameUrl} />}
       <p className="waiting">
         {gameUrl && "Waiting for your Friend to join..."}
       </p>
