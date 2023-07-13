@@ -55,7 +55,7 @@ function GameUI({ user }) {
     }
     // emit start game once both host and guest are redircted to game ui.
     if (user === "host") {
-      socket.emit("start game");
+      socket.emit("start game", roomId);
     }
     // to show the room expired modal when room expired event comes.
     socket.on("room expired", () => {

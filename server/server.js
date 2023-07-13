@@ -99,8 +99,7 @@ io.on("connection", (socket) => {
 
   // when start game event comes then send the initial game state to both guest and host in a room.
 
-  socket.on("start game", () => {
-    const roomId = activePlayers.get(socket.id); // get roomId
+  socket.on("start game", (roomId) => {
     // fetch the game state data from the room
     const host = rooms.get(roomId).host;
     const guest = rooms.get(roomId).guest;
