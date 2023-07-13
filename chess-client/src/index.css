@@ -51,7 +51,7 @@ body {
 
 .branding {
   font-weight: 900;
-  font-size: 3rem;
+  font-size: 2.5rem;
   /* font-family: "Poppins", sans-serif; */
   font-family: "Playfair Display SC", serif;
   letter-spacing: 0.1rem;
@@ -78,9 +78,9 @@ body {
 }
 
 .share-url {
-  height: 20%;
+  height: 17%;
   display: flex;
-  margin: 1% 0;
+  margin: 0;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
@@ -89,6 +89,7 @@ body {
 .share-text {
   color: yellow;
   margin: 0;
+  margin-bottom: 5px;
   font-size: 0.8rem;
   font-weight: 100;
 }
@@ -103,7 +104,8 @@ body {
 }
 
 .waiting {
-  margin: 8% auto 0;
+  margin: 7% auto 0;
+  font-size: 0.8rem;
 }
 
 .socials {
