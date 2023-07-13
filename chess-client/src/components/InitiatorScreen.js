@@ -7,6 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import HorizontalToggleBtn from "./HorizontalToggleBtn";
 import CustomButton from "./CustomButton";
 import Footer from "./Footer";
+import ShareButtons from "./ShareButtons";
 
 function InitiatorScreen({ handleUser }) {
   const [selectedColor, setSelectedColor] = useState("black");
@@ -80,9 +81,10 @@ function InitiatorScreen({ handleUser }) {
           <ContentCopyIcon style={{ color: "white" }} />
         </IconButton>
       </div>
-      <p className="waiting">
-        {gameUrl && "Waiting for your Friend to join..."}
-      </p>
+      <div className="share-url">
+        {gameUrl && <ShareButtons gameUrl={gameUrl} />}
+      </div>
+      
       <Footer />
     </div>
   );
