@@ -84,7 +84,9 @@ function InitiatorScreen({ handleUser }) {
       <div className="share-url">
         {gameUrl && <ShareButtons gameUrl={gameUrl} />}
       </div>
-      
+      <p className="waiting">
+        {gameUrl && "Waiting for your Friend to join..."}
+      </p>
       <Footer />
     </div>
   );

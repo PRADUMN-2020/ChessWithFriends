@@ -51,7 +51,7 @@ body {
 
 .branding {
   font-weight: 900;
-  font-size: 2.5rem;
+  font-size: 3rem;
   /* font-family: "Poppins", sans-serif; */
   font-family: "Playfair Display SC", serif;
   letter-spacing: 0.1rem;
@@ -78,18 +78,23 @@ body {
 }
 
 .share-url {
-  height: 16%;
-  display: flex;
+  position: absolute;
+  transform: rotate(90deg);
+  left: -12px;
+  top: 45%;
   margin: 0;
-  flex-direction: column;
+  display: flex;
   align-items: center;
   justify-content: space-evenly;
+  background: linear-gradient(-45deg, black, #565759);
+  border-radius: 2px;
+  padding: 1%;
 }
 
 .share-text {
   color: yellow;
   margin: 0;
-  margin-bottom: 5px;
+  margin-bottom: 5%;
   font-size: 0.8rem;
   font-weight: 100;
 }
@@ -97,25 +102,27 @@ body {
 .share-buttons-container {
   display: flex;
   justify-content: center;
+  /* flex-direction: column; */
 }
 
 .share-buttons {
-  margin: 0 10px;
+  transform: rotate(-90deg);
+  margin: 0 4%;
 }
 
 .waiting {
-  margin: 7% auto 0;
-  font-size: 0.8rem;
+  margin: 2% auto;
+  height: 1rem;
 }
 
 .socials {
   display: flex;
   justify-content: space-evenly;
-  margin: 1% auto 3%;
+  margin: 2% auto 4%;
 }
 
 .socials a {
-  margin: 2% 10%;
+  margin: 4% 10%;
 }
 
 .social-icon {

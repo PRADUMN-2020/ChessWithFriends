@@ -24,8 +24,8 @@ function ShareButtons({ gameUrl }) {
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="25px"
-            height="25px"
+            width="25"
+            height="25"
             fill="currentColor"
             class="bi bi-whatsapp"
             viewBox="0 0 16 16"
@@ -51,7 +51,6 @@ function ShareButtons({ gameUrl }) {
           </svg>
         </button>
       </div>
-      <p className="waiting">Waiting for your Friend to join...</p>
     </div>
   );
 }
