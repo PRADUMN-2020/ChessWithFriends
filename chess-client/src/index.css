@@ -87,7 +87,8 @@ body {
   align-items: center;
   flex-direction: column;
   justify-content: space-evenly;
-  background: linear-gradient(-45deg, black, #565759);
+  /* background: linear-gradient(-45deg, black, #565759); */
+  background-color: #000000;
   border-radius: 2px;
   padding: 1%;
 }
@@ -185,7 +186,7 @@ body {
   background-color: #363636;
   background-image: url("https://www.transparenttextures.com/patterns/xv.png");
   box-shadow: 0px 5px 15px black;
-  border-radius: 10px;
+  border-radius: 5px;
   text-align: center;
   padding: 4% 0;
 }
