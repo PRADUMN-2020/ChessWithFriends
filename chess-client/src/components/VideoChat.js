@@ -89,7 +89,7 @@ const VideoChat = ({ user, roomId }) => {
       }
 
       if (userType.current === "host") {
-        setTimeout(startChat, 500);
+        setTimeout(startChat, 2000);
       } else {
         startChat();
       }
@@ -134,13 +134,13 @@ const VideoChat = ({ user, roomId }) => {
         });
     }
 
-    setTimeout(startChat, 200); // start the video chat
+    setTimeout(startChat, 1000); // start the video chat
 
     // Clean up resources on unmount
     return () => {
-      // if (mediaStream.current)
-      // clear media stream
-      // mediaStream.current.getTracks().forEach((track) => track.stop());
+      if (mediaStream.current)
+        // clear media stream
+        mediaStream.current.getTracks().forEach((track) => track.stop());
       // if (peerRef.current) peerRef.current.destroy(); // destroy peer
       // if (!deleted.current) {
       //   socket.emit("quit", { rmId: roomId, user }); // if user leaves page emit quit
