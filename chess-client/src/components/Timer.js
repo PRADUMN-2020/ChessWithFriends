@@ -11,10 +11,12 @@ function Timer({ player, start, secs, handleMySecs }) {
   }
 
   useEffect(() => {
+
     setSeconds(secs);
   }, [secs]);
 
   useEffect(() => {
+    console.log("work hard.");
     if (start && seconds > 0) {
       timeId.current = setInterval(() => {
         setSeconds((prevSeconds) => {
@@ -36,8 +38,8 @@ function Timer({ player, start, secs, handleMySecs }) {
   }, [start]);
 
   useEffect(() => {
-    console.log("updating your secs.", seconds);
-    // handleMySecs(seconds);
+    // console.log("updating your secs.", seconds);
+    handleMySecs(seconds);
     if (seconds <= 0) {
       socket.emit("time expired");
     }

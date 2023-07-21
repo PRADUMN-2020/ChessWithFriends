@@ -111,6 +111,7 @@ io.on("connection", (socket) => {
         socket.broadcast.to(roomId).emit("redirect host");
       } else if (isValidUser(userId, roomId)) {
         const room = rooms.get(roomId);
+        const gameState = room.gameState;
         console.log("from reconnect before ", rooms.get(roomId).host.timer);
         io.to(roomId).emit("reconnected");
         if (room.host.id === userId) {
@@ -130,6 +131,7 @@ io.on("connection", (socket) => {
             hostLastMove: room.host.lastMove,
             guestSeconds: room.guest.seconds,
             guestLastMove: room.guest.lastMove,
+            turn: gameState.turn(),
           };
           console.log("reached host");
           socket.emit("started game", hostState);
@@ -147,6 +149,7 @@ io.on("connection", (socket) => {
             hostLastMove: room.host.lastMove,
             guestSeconds: room.guest.seconds,
             guestLastMove: room.guest.lastMove,
+            turn: gameState.turn(),
           };
           console.log("reached guest");
           socket.emit("started game", guestState);
@@ -166,7 +169,8 @@ io.on("connection", (socket) => {
 
   socket.on("start game", (roomId) => {
     // fetch the game state data from the room
-    const date = new Date();
+    const date = new Date().getTime();
+    console.log(date);
     rooms.get(roomId).host.lastMove = date;
     rooms.get(roomId).guest.lastMove = date;
     const host = rooms.get(roomId).host;
@@ -242,14 +246,16 @@ io.on("connection", (socket) => {
 
   socket.on("move", ({ move, roomId, userId, lastMove, seconds }) => {
     rooms.get(roomId).gameState.move(move);
+    console.log("from move", lastMove, seconds);
     if (activePlayers.get(socket.id).user === "host") {
-      rooms.get(roomId).hostSeconds = seconds;
-      rooms.get(roomId).hostLastMove = lastMove;
+      rooms.get(roomId).host.seconds = seconds;
+      rooms.get(roomId).host.lastMove = lastMove;
     } else {
-      rooms.get(roomId).guestSeconds = seconds;
-      rooms.get(roomId).guestLastMove = lastMove;
+      rooms.get(roomId).guest.seconds = seconds;
+      rooms.get(roomId).guest.lastMove = lastMove;
     }
     console.log(activePlayers.get(socket.id).user, seconds, lastMove);
+    console.log("updated room", rooms.get(roomId));
     const game = rooms.get(roomId).gameState; // get updated game state
     let isCheck = false;
     let checkStyles = {};
@@ -406,7 +412,7 @@ io.on("connection", (socket) => {
   // for handling the videochat intial signalling(before establishing a peer to peer connection).
   socket.on("signal", ({ data, roomId }) => {
     // Broadcast signaling data to appropriate recipient
-    console.log(data);
+    // console.log(data);
     socket.broadcast.to(roomId).emit("signal", data);
   });
 });

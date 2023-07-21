@@ -41,8 +41,14 @@ const ChessboardComponent = ({ roomId, user }) => {
   const latestSecs = useRef(600);
   const disconnector = useRef(null);
   const intervalId = useRef(null);
+  const color = useRef(null);
+  const userType = useRef(user);
   const userId = localStorage.getItem("chessWithFriendsId");
   const audio = new Audio(moveSound);
+
+  useEffect(() => {
+    userType.current = user;
+  }, [user]);
 
   function isPromotion(move) {
     // to return weather the promotion is possible for the given move.
@@ -66,7 +72,7 @@ const ChessboardComponent = ({ roomId, user }) => {
   }
 
   function handleOpponentSecs(sec) {
-    setOpponentSecs(sec);
+    // setOpponentSecs(sec);
   }
 
   const handlePromotionClose = () => {
@@ -76,7 +82,7 @@ const ChessboardComponent = ({ roomId, user }) => {
 
   function emitMove(move) {
     // emit the move event with the move data and roomId
-    const date = new Date();
+    const date = new Date().getTime();
     socket.emit("move", {
       move: move,
       roomId: roomId,
@@ -119,37 +125,55 @@ const ChessboardComponent = ({ roomId, user }) => {
     });
     // catch the player colors and game state given by server.
     socket.on("started game", (player) => {
+      console.log("1) started game", player);
       setPlayerColor(player.color);
+      color.current = player.color;
       setGame(player.gameState);
-      const date = new Date();
+      const date = new Date().getTime();
+      console.log(date);
       if (player.turn === player.color[0]) {
-        console.log("fuck u babes.");
+        console.log("2) you color match with turn");
         setYourSecs(() => {
           const secs =
-            user === "host"
+            userType.current === "host"
               ? player.hostSeconds -
                 Math.floor((date - player.guestLastMove) / 1000)
               : player.guestSeconds -
                 Math.floor((date - player.hostLastMove) / 1000);
-          console.log(secs);
+          console.log("your secs", secs);
           return secs;
         });
         setOpponentSecs(() => {
-          return user === "host" ? player.guestSeconds : player.hostSeconds;
+          const secs =
+            userType.current === "host"
+              ? player.guestSeconds
+              : player.hostSeconds;
+          console.log("opponenet secs", secs);
+          return secs;
         });
       } else {
+        console.log("2) your color dont match with turn");
         setYourSecs(() => {
-          return user === "host" ? player.hostSeconds : player.guestSeconds;
+          const secs =
+            userType.current === "host"
+              ? player.hostSeconds
+              : player.guestSeconds;
+          console.log("your secs", secs);
+          return secs;
         });
         setOpponentSecs(() => {
-          return user === "host"
-            ? player.guestSeconds -
+          const secs =
+            userType.current === "host"
+              ? player.guestSeconds -
                 Math.floor((date - player.hostLastMove) / 1000)
-            : player.hostSeconds -
+              : player.hostSeconds -
                 Math.floor((date - player.guestLastMove) / 1000);
+          console.log("opponenet secs", secs);
+          return secs;
         });
       }
-      if (player.color === "white") {
+      if (player.turn === player.color[0]) {
+        console.log("started white.");
         setYourTime(true);
       } else {
         setOpponentTime(true);
@@ -162,12 +186,17 @@ const ChessboardComponent = ({ roomId, user }) => {
 
     // catch the state of the game after a move by any client
     socket.on("state", (fen) => {
-      if (fen.turn === playerColor[0]) {
-        setYourTime(true);
-        setOpponentTime(false);
-      } else {
-        setOpponentTime(true);
+      console.log("fen", fen);
+      console.log("player color", playerColor[0]);
+
+      if (fen.turn !== color.current[0]) {
+        console.log("mismatch");
         setYourTime(false);
+        setOpponentTime(true);
+      } else {
+        console.log("match");
+        setOpponentTime(false);
+        setYourTime(true);
       }
 
       setGame(fen.state); // set game state
