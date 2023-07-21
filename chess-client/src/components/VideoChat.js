@@ -89,7 +89,7 @@ const VideoChat = ({ user, roomId }) => {
       // }
 
       if (userType.current === "host") {
-        setTimeout(startChat, 3000); // keep it higher than starting time
+        setTimeout(startChat, 6000); // keep it higher than starting time
       } else {
         startChat();
       }
@@ -134,7 +134,7 @@ const VideoChat = ({ user, roomId }) => {
         });
     }
 
-    setTimeout(startChat, 2000); // start the video chat, keep it lower than show opponent disconnection time, on line 92
+    setTimeout(startChat, 4000); // start the video chat, keep it lower than show opponent disconnection time, on line 92
 
     // Clean up resources on unmount
     return () => {
