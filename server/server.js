@@ -55,7 +55,7 @@ io.on("connection", (socket) => {
   // create a room when host emits create room with a selected color.
   socket.on("create room", ({ selectedColor, userId }) => {
     // console.log("create room");
-    console.log("host id", userId);
+    // console.log("host id", userId);
     const roomId = uuidv4(); // generate unique room Id
     const gameState = new Chess(); // create new instace of chess game
     // set the room data
@@ -100,7 +100,7 @@ io.on("connection", (socket) => {
 
   socket.on("join game", ({ roomId, userId }) => {
     // if room exist and is not occupied by another guest then set guestId to the room data in rooms map.
-    console.log("guest id", userId);
+    // console.log("guest id", userId);
     if (rooms.has(roomId)) {
       if (rooms.get(roomId).guest.id === "") {
         rooms.get(roomId).guest.id = userId;
@@ -110,11 +110,13 @@ io.on("connection", (socket) => {
         // emit event to redirect host to the corresponding game ui room
         socket.broadcast.to(roomId).emit("redirect host");
       } else if (isValidUser(userId, roomId)) {
+        // to handle reconnection of players already in a game room.
         const room = rooms.get(roomId);
         const gameState = room.gameState;
-        console.log("from reconnect before ", rooms.get(roomId).host.timer);
+        // console.log("from reconnect before ", rooms.get(roomId).host.timer);
         io.to(roomId).emit("reconnected");
         if (room.host.id === userId) {
+          // if user is host then clear timer the timer for him as he has reconnected and set that he is host, update his socket id, join game room, set as active player, sent him his all the state to reconnect.
           const timerId = rooms.get(roomId).host.timer;
           clearTimeout(timerId);
           socket.emit("set host");
@@ -134,9 +136,10 @@ io.on("connection", (socket) => {
             turn: gameState.turn(),
             user: activePlayers.get(socket.id).user,
           };
-          console.log("reached host");
+          // console.log("reached host");
           socket.emit("started game", hostState);
         } else {
+          // if user is guest then clear timer the timer for guest as he has reconnected and set that he is guest, update his socket id, join game room, set as active player, sent him his all the state to reconnect.
           const timerId = rooms.get(roomId).guest.timer;
           clearTimeout(timerId);
           rooms.get(roomId).guest.timer = null;
@@ -153,10 +156,10 @@ io.on("connection", (socket) => {
             turn: gameState.turn(),
             user: activePlayers.get(socket.id).user,
           };
-          console.log("reached guest");
+          // console.log("reached guest");
           socket.emit("started game", guestState);
         }
-        console.log("from reconnect after", rooms.get(roomId).host.timer);
+        // console.log("from reconnect after", rooms.get(roomId).host.timer);
       } else {
         // if room is occupied by another guest emit room expired
         socket.emit("room expired");
@@ -172,7 +175,7 @@ io.on("connection", (socket) => {
   socket.on("start game", (roomId) => {
     // fetch the game state data from the room
     const date = new Date().getTime();
-    console.log(date);
+    // console.log(date);
     rooms.get(roomId).host.lastMove = date;
     rooms.get(roomId).guest.lastMove = date;
     const host = rooms.get(roomId).host;
@@ -201,8 +204,8 @@ io.on("connection", (socket) => {
       turn: gameState.turn(),
       user: activePlayers.get(socket.id).user,
     };
-    console.log("hostState", hostState);
-    console.log("guestState", guestState);
+    // console.log("hostState", hostState);
+    // console.log("guestState", guestState);
     // emit guest and host inital states respectively.
     socket.broadcast.to(roomId).emit("started game", guestState);
     socket.emit("started game", hostState);
@@ -250,7 +253,8 @@ io.on("connection", (socket) => {
 
   socket.on("move", ({ move, roomId, userId, lastMove, seconds }) => {
     rooms.get(roomId).gameState.move(move);
-    console.log("from move", lastMove, seconds);
+    // set the secs and last move (time stamp) for the respective client at which he moves.
+    // console.log("from move", lastMove, seconds);
     if (activePlayers.get(socket.id).user === "host") {
       rooms.get(roomId).host.seconds = seconds;
       rooms.get(roomId).host.lastMove = lastMove;
@@ -258,8 +262,8 @@ io.on("connection", (socket) => {
       rooms.get(roomId).guest.seconds = seconds;
       rooms.get(roomId).guest.lastMove = lastMove;
     }
-    console.log(activePlayers.get(socket.id).user, seconds, lastMove);
-    console.log("updated room", rooms.get(roomId));
+    // console.log(activePlayers.get(socket.id).user, seconds, lastMove);
+    // console.log("updated room", rooms.get(roomId));
     const game = rooms.get(roomId).gameState; // get updated game state
     let isCheck = false;
     let checkStyles = {};
@@ -305,8 +309,8 @@ io.on("connection", (socket) => {
       io.to(roomId).emit("verdict", verdict);
       if (activePlayers.has(socket.id)) {
         deleteRoom(socket.id);
-        // console.log(rooms);
-        // console.log(activePlayers);
+        console.log(rooms);
+        console.log(activePlayers);
       }
     }
   });
@@ -344,7 +348,10 @@ io.on("connection", (socket) => {
   //   }
   // });
 
+  // fucntion to handle when a user disconnected and did not join after 30 sec of disconnection.
+
   function userDisconnected(userSocketId) {
+    // send the disconnect player as looser and delete the game room.
     if (activePlayers.has(userSocketId)) {
       const roomId = activePlayers.get(userSocketId).roomId;
       const hostSocket = rooms.get(roomId).host.socketId;
@@ -361,7 +368,7 @@ io.on("connection", (socket) => {
 
   // new disconnect
   socket.on("disconnect", () => {
-    console.log("socket disconnected");
+    // console.log("socket disconnected");
     const userSocketId = socket.id;
     if (activePlayers.has(userSocketId)) {
       const activePlayer = activePlayers.get(userSocketId);
@@ -371,6 +378,7 @@ io.on("connection", (socket) => {
       const opponentSocket =
         hostSocket === userSocketId ? room.guest.socketId : hostSocket;
       if (room.host.id && room.guest.id) {
+        // if room is full then show user that his opponent disconnected.
         io.to(opponentSocket).emit("show opponent disconnection");
         rooms.get(activePlayer.roomId)[activePlayer.user].timer = setTimeout(
           () => {
@@ -380,6 +388,7 @@ io.on("connection", (socket) => {
           30000
         );
       } else {
+        // delete room if the room has only one
         deleteRoom(socket.id);
       }
     }
@@ -388,7 +397,7 @@ io.on("connection", (socket) => {
   // listen to quit event when a client chosses to quit and emit the quitter(looser) and finally delete the room and inactive players.
 
   socket.on("quit", ({ rmId, user }) => {
-    console.log(user + " quits.");
+    // console.log(user + " quits.");
     let looser = rooms.get(rmId)[user].color;
     if (looser === "white") looser = "White";
     else looser = "Black";
