@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Chessboard } from "react-chessboard";
 import socket from "../socketLogic";
 import moveSound from "../assets/ChessMove.mp3";
 import PromotionModal from "./PromotionModal";
+import Timer from "./Timer";
 
 // chess pices can be customised
 
@@ -31,6 +32,17 @@ const ChessboardComponent = ({ roomId, user }) => {
   const [squareData, setSquareData] = useState({}); // to store the Data of the clicked square as received from the server.
   const [checkStyle, setCheckStyle] = useState({}); // to store the style for when it is check.
   const [promotionOpen, setPromotionOpen] = useState(false); // weather or not to show promotion modal
+  const [countdown, setCountdown] = useState(30);
+  const [showTimer, setShowTimer] = useState(false);
+  const [opponentTime, setOpponentTime] = useState(false);
+  const [yourTime, setYourTime] = useState(false);
+  const [yourSecs, setYourSecs] = useState(600);
+  const [opponentSecs, setOpponentSecs] = useState(600);
+  const latestSecs = useRef(600);
+  const disconnector = useRef(null);
+  const intervalId = useRef(null);
+  const userId = localStorage.getItem("chessWithFriendsId");
+  const audio = new Audio(moveSound);
 
   function isPromotion(move) {
     // to return weather the promotion is possible for the given move.
@@ -49,13 +61,29 @@ const ChessboardComponent = ({ roomId, user }) => {
     return ans;
   }
 
+  function handleMySecs(sec) {
+    latestSecs.current = sec;
+  }
+
+  function handleOpponentSecs(sec) {
+    setOpponentSecs(sec);
+  }
+
   const handlePromotionClose = () => {
     // to close the promotion modal.
     setPromotionOpen(false);
   };
+
   function emitMove(move) {
     // emit the move event with the move data and roomId
-    socket.emit("move", { move: move, roomId: roomId });
+    const date = new Date();
+    socket.emit("move", {
+      move: move,
+      roomId: roomId,
+      userId,
+      lastMove: date,
+      seconds: latestSecs.current,
+    });
   }
 
   function promote(option) {
@@ -70,10 +98,62 @@ const ChessboardComponent = ({ roomId, user }) => {
   }
 
   useEffect(() => {
+    if (showTimer) {
+      intervalId.current = setInterval(() => {
+        setCountdown((prevCountdown) => prevCountdown - 1);
+      }, 1000);
+    }
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [showTimer]);
+
+  useEffect(() => {
+    socket.on("reconnected", () => {
+      setShowTimer(false);
+      clearTimeout(intervalId.current);
+      intervalId.current = null;
+      disconnector.current = null;
+      setCountdown(30);
+    });
     // catch the player colors and game state given by server.
     socket.on("started game", (player) => {
       setPlayerColor(player.color);
       setGame(player.gameState);
+      const date = new Date();
+      if (player.turn === player.color[0]) {
+        console.log("fuck u babes.");
+        setYourSecs(() => {
+          const secs =
+            user === "host"
+              ? player.hostSeconds -
+                Math.floor((date - player.guestLastMove) / 1000)
+              : player.guestSeconds -
+                Math.floor((date - player.hostLastMove) / 1000);
+          console.log(secs);
+          return secs;
+        });
+        setOpponentSecs(() => {
+          return user === "host" ? player.guestSeconds : player.hostSeconds;
+        });
+      } else {
+        setYourSecs(() => {
+          return user === "host" ? player.hostSeconds : player.guestSeconds;
+        });
+        setOpponentSecs(() => {
+          return user === "host"
+            ? player.guestSeconds -
+                Math.floor((date - player.hostLastMove) / 1000)
+            : player.hostSeconds -
+                Math.floor((date - player.guestLastMove) / 1000);
+        });
+      }
+      if (player.color === "white") {
+        setYourTime(true);
+      } else {
+        setOpponentTime(true);
+      }
     });
     // on getting the selected square data
     socket.on("square data", (Data) => {
@@ -82,6 +162,14 @@ const ChessboardComponent = ({ roomId, user }) => {
 
     // catch the state of the game after a move by any client
     socket.on("state", (fen) => {
+      if (fen.turn === playerColor[0]) {
+        setYourTime(true);
+        setOpponentTime(false);
+      } else {
+        setOpponentTime(true);
+        setYourTime(false);
+      }
+
       setGame(fen.state); // set game state
       // set move styles
       if (fen.isCheck) {
@@ -94,9 +182,21 @@ const ChessboardComponent = ({ roomId, user }) => {
         setValidPlaceStyles({ ...fen.moveStyle });
       }
 
-      const audio = new Audio(moveSound); // play the audio
-      audio.play();
+      audio.play(); // play the audio
     });
+
+    socket.on("show opponent disconnection", () => {
+      // to handle opponent disconnection
+      disconnector.current = "opponent";
+      setShowTimer(true);
+      console.log("opponent disconnected");
+    });
+
+    socket.on("disconnect", () => {
+      disconnector.current = "self";
+      setShowTimer(true);
+    });
+
     return () => {
       socket.off("started game");
       socket.off("square data");
@@ -151,7 +251,26 @@ const ChessboardComponent = ({ roomId, user }) => {
   return (
     <div className="board col-lg-6 px-lg-5">
       {/* to show the plays color */}
-      <h1>Your Color: {playerColor === "white" ? "White" : "Black"}</h1>
+      <Timer
+        player="Opponent"
+        start={opponentTime}
+        secs={opponentSecs}
+        handleMySecs={handleOpponentSecs}
+      />
+
+      <p style={{ textAlign: "center", color: "#fa2916", height: "1rem" }}>
+        {countdown > 0 &&
+          showTimer &&
+          (disconnector.current === "self"
+            ? "You are disconnected, Please reload to countinue, Game ends in " +
+              countdown +
+              " secs."
+            : disconnector.current.toUpperCase() +
+              " disconnected, Game ends in " +
+              countdown +
+              " secs.")}
+      </p>
+
       <Chessboard
         position={game}
         onSquareClick={(square) => {
@@ -173,6 +292,12 @@ const ChessboardComponent = ({ roomId, user }) => {
         arePiecesDraggable={false}
         boardOrientation={playerColor}
         sparePieces={true}
+      />
+      <Timer
+        player="You"
+        start={yourTime}
+        secs={yourSecs}
+        handleMySecs={handleMySecs}
       />
       <PromotionModal
         open={promotionOpen}

@@ -9,7 +9,7 @@ import VerdictModal from "./VerdictModal";
 import InvalidRoomModal from "./InvalidRoomModal";
 import CustomButton from "./CustomButton";
 
-function GameUI({ user }) {
+function GameUI({ user, handleUser }) {
   // imported user from app to forward to ChessboardComp
   const navigate = useNavigate();
   const { id } = useParams(); // taken the Room id form the url parameter
@@ -20,7 +20,6 @@ function GameUI({ user }) {
   const verdictRef = useRef(""); // to store the final verdict of game
   const roomId = useRef(id); // to store the rooId
   const looser = useRef(""); // to store who is looser colour
-
   const handleClose = () => setQuitCnf(false); // to close the quit confirmation modal
 
   function handleQuit() {
@@ -51,12 +50,17 @@ function GameUI({ user }) {
   useEffect(() => {
     // join cooresponding room if guest
     if (user === "guest") {
-      socket.emit("join game", roomId.current);
+      const userId = localStorage.getItem("chessWithFriendsId");
+      socket.emit("join game", { roomId: roomId.current, userId });
     }
     // emit start game once both host and guest are redircted to game ui.
     if (user === "host") {
       socket.emit("start game", id);
     }
+
+    socket.on("set host", () => {
+      handleUser("host");
+    });
     // to show the room expired modal when room expired event comes.
     socket.on("room expired", () => {
       setIsRoomExpired(true);
@@ -73,6 +77,7 @@ function GameUI({ user }) {
       verdictRef.current = verdict;
       setShowVerdict(true);
     });
+
     return () => {
       socket.off("verdict");
       socket.off("show quit modal");

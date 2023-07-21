@@ -3,6 +3,7 @@ const http = require("http");
 const Server = require("socket.io");
 const { Chess } = require("chess.js");
 const { v4: uuidv4 } = require("uuid");
+const { kMaxLength } = require("buffer");
 require("dotenv").config();
 
 const app = express(); // create express app
@@ -52,16 +53,30 @@ app.get("/", (req, res) => {
 io.on("connection", (socket) => {
   // console.log("A user connected");
   // create a room when host emits create room with a selected color.
-  socket.on("create room", (selectedColor) => {
+  socket.on("create room", ({ selectedColor, userId }) => {
     // console.log("create room");
+    console.log("host id", userId);
     const roomId = uuidv4(); // generate unique room Id
     const gameState = new Chess(); // create new instace of chess game
     // set the room data
     rooms.set(roomId, {
-      host: { id: socket.id, color: selectedColor },
+      host: {
+        id: userId,
+        socketId: socket.id,
+        color: selectedColor,
+        // active: true,
+        timer: null,
+        seconds: 600,
+        lastMove: null,
+      },
       guest: {
         id: "",
+        socketId: "",
         color: selectedColor === "white" ? "black" : "white",
+        // active: false,
+        timer: null,
+        seconds: 600,
+        lastMove: null,
       },
       gameState: gameState,
     });
@@ -69,7 +84,7 @@ io.on("connection", (socket) => {
     // Join the room
     socket.join(roomId);
     // set as player with roomID
-    activePlayers.set(socket.id, roomId);
+    activePlayers.set(socket.id, { roomId, user: "host" });
 
     // Emit room Created event to the host
     socket.emit("room created", roomId);
@@ -77,16 +92,66 @@ io.on("connection", (socket) => {
 
   // handle join game event when a new guest joins
 
-  socket.on("join game", (roomId) => {
+  function isValidUser(userId, roomId) {
+    let room = rooms.get(roomId);
+    let valid = room.host.id === userId || room.guest.id === userId;
+    return valid;
+  }
+
+  socket.on("join game", ({ roomId, userId }) => {
     // if room exist and is not occupied by another guest then set guestId to the room data in rooms map.
+    console.log("guest id", userId);
     if (rooms.has(roomId)) {
-      if (!rooms.get(roomId).guest.id) {
-        const userId = socket.id;
+      if (rooms.get(roomId).guest.id === "") {
         rooms.get(roomId).guest.id = userId;
+        rooms.get(roomId).guest.socketId = socket.id;
         socket.join(roomId); // join room
-        activePlayers.set(userId, roomId); // set this guest as active player
+        activePlayers.set(socket.id, { roomId, user: "guest" }); // set this guest as active player
         // emit event to redirect host to the corresponding game ui room
         socket.broadcast.to(roomId).emit("redirect host");
+      } else if (isValidUser(userId, roomId)) {
+        const room = rooms.get(roomId);
+        console.log("from reconnect before ", rooms.get(roomId).host.timer);
+        io.to(roomId).emit("reconnected");
+        if (room.host.id === userId) {
+          const timerId = rooms.get(roomId).host.timer;
+          clearTimeout(timerId);
+          socket.emit("set host");
+
+          rooms.get(roomId).host.timer = null;
+          rooms.get(roomId).host.socketId = socket.id;
+          socket.join(roomId); // join room
+          activePlayers.set(socket.id, { roomId, user: "host" });
+
+          const hostState = {
+            color: room.host.color,
+            gameState: room.gameState.fen(),
+            hostSeconds: room.host.seconds,
+            hostLastMove: room.host.lastMove,
+            guestSeconds: room.guest.seconds,
+            guestLastMove: room.guest.lastMove,
+          };
+          console.log("reached host");
+          socket.emit("started game", hostState);
+        } else {
+          const timerId = rooms.get(roomId).guest.timer;
+          clearTimeout(timerId);
+          rooms.get(roomId).guest.timer = null;
+          rooms.get(roomId).guest.socketId = socket.id;
+          socket.join(roomId); // join room
+          activePlayers.set(socket.id, { roomId, user: "guest" });
+          const guestState = {
+            color: room.guest.color,
+            gameState: room.gameState.fen(),
+            hostSeconds: room.host.seconds,
+            hostLastMove: room.host.lastMove,
+            guestSeconds: room.guest.seconds,
+            guestLastMove: room.guest.lastMove,
+          };
+          console.log("reached guest");
+          socket.emit("started game", guestState);
+        }
+        console.log("from reconnect after", rooms.get(roomId).host.timer);
       } else {
         // if room is occupied by another guest emit room expired
         socket.emit("room expired");
@@ -101,6 +166,9 @@ io.on("connection", (socket) => {
 
   socket.on("start game", (roomId) => {
     // fetch the game state data from the room
+    const date = new Date();
+    rooms.get(roomId).host.lastMove = date;
+    rooms.get(roomId).guest.lastMove = date;
     const host = rooms.get(roomId).host;
     const guest = rooms.get(roomId).guest;
     const gameState = rooms.get(roomId).gameState;
@@ -109,12 +177,24 @@ io.on("connection", (socket) => {
     const hostState = {
       color: host.color,
       gameState: fen,
+      hostSeconds: host.seconds,
+      hostLastMove: host.lastMove,
+      guestSeconds: guest.seconds,
+      guestLastMove: guest.lastMove,
+      turn: gameState.turn(),
     };
     // set guestState
     const guestState = {
       color: guest.color,
       gameState: fen,
+      hostSeconds: host.seconds,
+      hostLastMove: host.lastMove,
+      guestSeconds: guest.seconds,
+      guestLastMove: guest.lastMove,
+      turn: gameState.turn(),
     };
+    console.log("hostState", hostState);
+    console.log("guestState", guestState);
     // emit guest and host inital states respectively.
     socket.broadcast.to(roomId).emit("started game", guestState);
     socket.emit("started game", hostState);
@@ -160,8 +240,16 @@ io.on("connection", (socket) => {
 
   // when move event comes (when a client moves) update the move on the game state.
 
-  socket.on("move", ({ move, roomId }) => {
+  socket.on("move", ({ move, roomId, userId, lastMove, seconds }) => {
     rooms.get(roomId).gameState.move(move);
+    if (activePlayers.get(socket.id).user === "host") {
+      rooms.get(roomId).hostSeconds = seconds;
+      rooms.get(roomId).hostLastMove = lastMove;
+    } else {
+      rooms.get(roomId).guestSeconds = seconds;
+      rooms.get(roomId).guestLastMove = lastMove;
+    }
+    console.log(activePlayers.get(socket.id).user, seconds, lastMove);
     const game = rooms.get(roomId).gameState; // get updated game state
     let isCheck = false;
     let checkStyles = {};
@@ -200,11 +288,12 @@ io.on("connection", (socket) => {
       isCheck: isCheck,
       checkStyles: checkStyles,
       moveStyle: moveStyle,
+      turn: turn,
     });
     // if game over then emit verdict and delete the correspoinding game room.
-    if (game.isGameOver()) {
+    if (game.isGameOver() && rooms.has(roomId)) {
       io.to(roomId).emit("verdict", verdict);
-      if (activePlayers.get(socket.id)) {
+      if (activePlayers.has(socket.id)) {
         deleteRoom(socket.id);
         // console.log(rooms);
         // console.log(activePlayers);
@@ -213,33 +302,76 @@ io.on("connection", (socket) => {
   });
 
   // function to delete the inactive players and room.
-  function deleteRoom(socketId) {
-    const roomId = activePlayers.get(socketId);
-    io.to(roomId).emit("delete peer"); // emit to destroy the socket io peer.
-    const hostId = rooms.get(roomId).host.id;
-    const guestId = rooms.get(roomId).guest.id;
-    activePlayers.delete(hostId);
-    activePlayers.delete(guestId);
+  function deleteRoom(socketID) {
+    const roomId = activePlayers.get(socketID).roomId;
+    if (rooms.get(roomId).guest.id) {
+      io.to(roomId).emit("delete peer");
+      const guestSocket = rooms.get(roomId).guest.socketId;
+      activePlayers.delete(guestSocket);
+    } // emit to destroy the socket io peer.
+    const hostSocket = rooms.get(roomId).host.socketId;
+    activePlayers.delete(hostSocket);
     rooms.delete(roomId);
-    // console.log(rooms);
-    // console.log(activePlayers);
+    console.log(rooms);
+    console.log(activePlayers);
   }
 
   // listen to disconnect event when someone closes the tab or reloads and show the  quitter(looser) and delete the room and inactive players.
 
-  socket.on("disconnect", () => {
-    console.log("socket disconnected");
-    if (activePlayers.get(socket.id)) {
-      const roomId = activePlayers.get(socket.id);
-      const hostId = rooms.get(roomId).host.id;
+  // socket.on("disconnect", () => {
+  //   console.log("socket disconnected");
+  //   if (rooms.get(activePlayers.get(socket.id))) {
+  //     const roomId = activePlayers.get(socket.id);
+  //     const hostId = rooms.get(roomId).host.id;
+  //     let looser =
+  //       hostId === socket.id
+  //         ? rooms.get(roomId).host.color
+  //         : rooms.get(roomId).guest.color;
+  //     if (looser === "white") looser = "White";
+  //     else looser = "Black";
+  //     io.to(roomId).emit("show quit modal", looser);
+  //     deleteRoom(socket.id);
+  //   }
+  // });
+
+  function userDisconnected(userSocketId) {
+    if (activePlayers.has(userSocketId)) {
+      const roomId = activePlayers.get(userSocketId).roomId;
+      const hostSocket = rooms.get(roomId).host.socketId;
       let looser =
-        hostId === socket.id
+        hostSocket === userSocketId
           ? rooms.get(roomId).host.color
           : rooms.get(roomId).guest.color;
       if (looser === "white") looser = "White";
       else looser = "Black";
       io.to(roomId).emit("show quit modal", looser);
-      deleteRoom(socket.id);
+      deleteRoom(userSocketId);
+    }
+  }
+
+  // new disconnect
+  socket.on("disconnect", () => {
+    console.log("socket disconnected");
+    const userSocketId = socket.id;
+    if (activePlayers.has(userSocketId)) {
+      const activePlayer = activePlayers.get(userSocketId);
+      const roomId = activePlayer.roomId;
+      const room = rooms.get(roomId);
+      const hostSocket = room.host.socketId;
+      const opponentSocket =
+        hostSocket === userSocketId ? room.guest.socketId : hostSocket;
+      if (room.host.id && room.guest.id) {
+        io.to(opponentSocket).emit("show opponent disconnection");
+        rooms.get(activePlayer.roomId)[activePlayer.user].timer = setTimeout(
+          () => {
+            // If the user didn't reconnect, delete the game room and end the game
+            userDisconnected(userSocketId);
+          },
+          30000
+        );
+      } else {
+        deleteRoom(socket.id);
+      }
     }
   });
 
@@ -254,10 +386,27 @@ io.on("connection", (socket) => {
     deleteRoom(socket.id);
   });
 
+  // to handle timer expiration.
+
+  socket.on("time expired", () => {
+    if (activePlayers.has(socket.id)) {
+      const looserSocketId = socket.id;
+      const roomId = activePlayers.get(looserSocketId).roomId;
+      const looser = activePlayers.get(looserSocketId).user;
+      const looserColor = rooms.get(roomId)[looser].color;
+      let verdict =
+        looserColor !== "white"
+          ? "1 - 0 Black Timeout White Wins"
+          : "0 - 1 White Timeout Black Wins";
+      io.to(roomId).emit("verdict", verdict);
+      deleteRoom(looserSocketId);
+    }
+  });
+
   // for handling the videochat intial signalling(before establishing a peer to peer connection).
   socket.on("signal", ({ data, roomId }) => {
     // Broadcast signaling data to appropriate recipient
-    // console.log(data);
+    console.log(data);
     socket.broadcast.to(roomId).emit("signal", data);
   });
 });

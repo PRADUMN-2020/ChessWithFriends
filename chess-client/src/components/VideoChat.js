@@ -16,7 +16,8 @@ const VideoChat = ({ user, roomId }) => {
   const mediaStream = useRef(null); // to store the mediastream.
   const localStream = useRef(null); // to store the remote stream
   const remoteStream = useRef(null); // to store the local stream
-  const deleted = useRef(true); // to store weather the room is deleted
+  const userType = useRef(user);
+  // const deleted = useRef(true); // to store weather the room is deleted
 
   function handleAudio() {
     // function to toogle the audio on and off
@@ -33,7 +34,7 @@ const VideoChat = ({ user, roomId }) => {
   }
 
   function handleVideo() {
-    // function to toogle the video on and off
+    // function to toggle the video on and off
     const video = mediaStream.current
       .getTracks()
       .find((track) => track.kind === "video");
@@ -47,23 +48,50 @@ const VideoChat = ({ user, roomId }) => {
   }
 
   useEffect(() => {
+    userType.current = user;
+  }, [user]);
+
+  useEffect(() => {
     socket.on("started game", () => {
       // room created
-      deleted.current = false;
-      console.log("room created ", deleted.current);
+      // deleted.current = false;
+      // console.log("room created ", deleted.current);
     });
     // destroy the peer and clean media stream
     socket.on("delete peer", () => {
-      deleted.current = true; // room deleted
-      console.log("room deleted ", deleted.current);
+      // deleted.current = true; // room deleted
+      // console.log("room deleted ", deleted.current);
       if (peerRef.current) {
+        socket.off("signal");
         peerRef.current.destroy();
+        peerRef.current = null;
       }
+      console.log("idhar aya.");
 
-      if (localStream.current.srcObject) localStream.current.srcObject = null;
+      if (localStream.current) localStream.current.srcObject = null;
 
       if (mediaStream.current) {
         mediaStream.current.getTracks().forEach((track) => track.stop());
+      }
+    });
+
+    socket.on("show opponent disconnection", () => {
+      if (peerRef.current) {
+        peerRef.current.destroy();
+        peerRef.current = null;
+        socket.off("signal");
+      }
+
+      if (localStream.current) localStream.current.srcObject = null;
+
+      if (mediaStream.current) {
+        mediaStream.current.getTracks().forEach((track) => track.stop());
+      }
+
+      if (userType.current === "host") {
+        setTimeout(startChat, 500);
+      } else {
+        startChat();
       }
     });
 
@@ -71,13 +99,14 @@ const VideoChat = ({ user, roomId }) => {
       navigator.mediaDevices // Get local video stream
         .getUserMedia({ video: true, audio: true })
         .then((stream) => {
+          console.log("the user is from start Chat", user);
           localStream.current.srcObject = stream; // set local stream
           mediaStream.current = stream; // store stream
 
           // Initialize SimplePeer object ans set it as initiator if the current client is host.
           //  1. Peer Created
           peerRef.current = new Peer({
-            initiator: user === "host",
+            initiator: userType.current === "host",
             trickle: true,
             stream: stream,
           });
@@ -105,20 +134,19 @@ const VideoChat = ({ user, roomId }) => {
         });
     }
 
-    startChat(); // start the video chat
+    setTimeout(startChat, 200); // start the video chat
 
     // Clean up resources on unmount
     return () => {
-      if (mediaStream.current)
-        // clear media stream
-        mediaStream.current.getTracks().forEach((track) => track.stop());
-
-      if (peerRef.current) peerRef.current.destroy(); // destroy peer
-      if (!deleted.current) {
-        socket.emit("quit", { rmId: roomId, user }); // if user leaves page emit quit
-      }
+      // if (mediaStream.current)
+      // clear media stream
+      // mediaStream.current.getTracks().forEach((track) => track.stop());
+      // if (peerRef.current) peerRef.current.destroy(); // destroy peer
+      // if (!deleted.current) {
+      //   socket.emit("quit", { rmId: roomId, user }); // if user leaves page emit quit
+      // }
       socket.off("signal"); // switch off signal
-      socket.off("delete peer"); //switch off delete peer
+      // socket.off("delete peer"); //switch off delete peer
     };
   }, [roomId]);
 

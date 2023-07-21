@@ -15,7 +15,7 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" element={<InitiatorScreen handleUser={handleUser} />} />
-        <Route path="/:id" element={<GameUI user={user} />} />
+        <Route path="/:id" element={<GameUI user={user} handleUser={handleUser} />} />
         <Route path="/full" element={<RoomFull />} />
       </Routes>
     </Router>

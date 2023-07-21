@@ -41,7 +41,8 @@ function InitiatorScreen({ handleUser }) {
   function handleClick(event) {
     if (!clicked.current) {
       handleUser("host");
-      socket.emit("create room", selectedColor);
+      const userId = localStorage.getItem("chessWithFriendsId");
+      socket.emit("create room", { selectedColor, userId });
       clicked.current = true;
     }
   }
