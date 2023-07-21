@@ -32,17 +32,17 @@ const ChessboardComponent = ({ roomId, user }) => {
   const [squareData, setSquareData] = useState({}); // to store the Data of the clicked square as received from the server.
   const [checkStyle, setCheckStyle] = useState({}); // to store the style for when it is check.
   const [promotionOpen, setPromotionOpen] = useState(false); // weather or not to show promotion modal
-  const [countdown, setCountdown] = useState(30);
-  const [showTimer, setShowTimer] = useState(false);
-  const [opponentTime, setOpponentTime] = useState(false);
-  const [yourTime, setYourTime] = useState(false);
-  const [yourSecs, setYourSecs] = useState(600);
-  const [opponentSecs, setOpponentSecs] = useState(600);
-  const latestSecs = useRef(600);
-  const disconnector = useRef(null);
-  const intervalId = useRef(null);
-  const color = useRef(null);
-  const userId = localStorage.getItem("chessWithFriendsId");
+  const [countdown, setCountdown] = useState(30); // to store countown to delete game room when another player disconnects.
+  const [showTimer, setShowTimer] = useState(false); // weather or not to show the countdown for game room end.
+  const [opponentTime, setOpponentTime] = useState(false); // set the start and stop of opponent chess clock.
+  const [yourTime, setYourTime] = useState(false); // set the start and stop of your chess clock.
+  const [yourSecs, setYourSecs] = useState(600); // to store the seconds left with this client
+  const [opponentSecs, setOpponentSecs] = useState(600); // to store the seconds left with opponent.
+  const latestSecs = useRef(600); // to store most recent secends left for this client.
+  const disconnector = useRef(null); // to store who disconnected.
+  const intervalId = useRef(null); // to store the interval id to the game end when opponent disconnects.
+  const color = useRef(null); // to store this player's color.
+  const userId = localStorage.getItem("chessWithFriendsId"); // to store this user's local stored user id (main id of the user.)
   const audio = new Audio(moveSound);
 
   function isPromotion(move) {
@@ -99,6 +99,7 @@ const ChessboardComponent = ({ roomId, user }) => {
   }
 
   useEffect(() => {
+    // to run the countdown for ending game room when opponent disconnects.
     if (showTimer) {
       intervalId.current = setInterval(() => {
         setCountdown((prevCountdown) => prevCountdown - 1);
@@ -111,6 +112,7 @@ const ChessboardComponent = ({ roomId, user }) => {
   }, [showTimer]);
 
   useEffect(() => {
+    // to remove the countdown if opponent reconnects.
     socket.on("reconnected", () => {
       setShowTimer(false);
       clearTimeout(intervalId.current);
@@ -120,14 +122,15 @@ const ChessboardComponent = ({ roomId, user }) => {
     });
     // catch the player colors and game state given by server.
     socket.on("started game", (player) => {
-      console.log("1) started game", player);
+      // console.log("1) started game", player);
       setPlayerColor(player.color);
       color.current = player.color;
       setGame(player.gameState);
+      // chess clock logic to set the remaining seconds for the both players.
       const date = new Date().getTime();
-      console.log(date);
+      // console.log(date);
       if (player.turn === player.color[0]) {
-        console.log("2) you color match with turn");
+        // console.log("2) you color match with turn");
         setYourSecs(() => {
           const secs =
             player.user === "host"
@@ -135,21 +138,21 @@ const ChessboardComponent = ({ roomId, user }) => {
                 Math.floor((date - player.guestLastMove) / 1000)
               : player.guestSeconds -
                 Math.floor((date - player.hostLastMove) / 1000);
-          console.log("your secs", secs);
+          // console.log("your secs", secs);
           return secs;
         });
         setOpponentSecs(() => {
           const secs =
             player.user === "host" ? player.guestSeconds : player.hostSeconds;
-          console.log("opponenet secs", secs);
+          // console.log("opponenet secs", secs);
           return secs;
         });
       } else {
-        console.log("2) your color dont match with turn");
+        // console.log("2) your color dont match with turn");
         setYourSecs(() => {
           const secs =
             player.user === "host" ? player.hostSeconds : player.guestSeconds;
-          console.log("your secs", secs);
+          // console.log("your secs", secs);
           return secs;
         });
         setOpponentSecs(() => {
@@ -159,12 +162,12 @@ const ChessboardComponent = ({ roomId, user }) => {
                 Math.floor((date - player.hostLastMove) / 1000)
               : player.hostSeconds -
                 Math.floor((date - player.guestLastMove) / 1000);
-          console.log("opponenet secs", secs);
+          // console.log("opponenet secs", secs);
           return secs;
         });
       }
       if (player.turn === player.color[0]) {
-        console.log("started white.");
+        // console.log("started white.");
         setYourTime(true);
       } else {
         setOpponentTime(true);
@@ -177,15 +180,15 @@ const ChessboardComponent = ({ roomId, user }) => {
 
     // catch the state of the game after a move by any client
     socket.on("state", (fen) => {
-      console.log("fen", fen);
-      console.log("player color", playerColor[0]);
-
+      // console.log("fen", fen);
+      // console.log("player color", playerColor[0]);
+      // chess clock logic to start and stop clock.
       if (fen.turn !== color.current[0]) {
-        console.log("mismatch");
+        // console.log("mismatch");
         setYourTime(false);
         setOpponentTime(true);
       } else {
-        console.log("match");
+        // console.log("match");
         setOpponentTime(false);
         setYourTime(true);
       }
@@ -209,7 +212,7 @@ const ChessboardComponent = ({ roomId, user }) => {
       // to handle opponent disconnection
       disconnector.current = "opponent";
       setShowTimer(true);
-      console.log("opponent disconnected");
+      // console.log("opponent disconnected");
     });
 
     socket.on("disconnect", () => {
@@ -271,14 +274,7 @@ const ChessboardComponent = ({ roomId, user }) => {
   return (
     <div className="board col-lg-6 px-lg-5">
       {/* to show the plays color */}
-      <Timer
-        player="Opponent"
-        start={opponentTime}
-        secs={opponentSecs}
-        handleMySecs={handleOpponentSecs}
-      />
-
-      <p style={{ textAlign: "center", color: "#fa2916", height: "1rem" }}>
+      <p className="show-user-disconnected">
         {countdown > 0 &&
           showTimer &&
           (disconnector.current === "self"
@@ -290,6 +286,12 @@ const ChessboardComponent = ({ roomId, user }) => {
               countdown +
               " secs.")}
       </p>
+      <Timer
+        player="Opponent"
+        start={opponentTime}
+        secs={opponentSecs}
+        handleMySecs={handleOpponentSecs}
+      />
 
       <Chessboard
         position={game}

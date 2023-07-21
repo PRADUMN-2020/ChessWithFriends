@@ -11,12 +11,13 @@ function Timer({ player, start, secs, handleMySecs }) {
   }
 
   useEffect(() => {
-
+    // to update the seconds from the server.
     setSeconds(secs);
   }, [secs]);
 
   useEffect(() => {
-    console.log("work hard.");
+    // console.log("work hard.");
+    // to handle start stop of chess clock.
     if (start && seconds > 0) {
       timeId.current = setInterval(() => {
         setSeconds((prevSeconds) => {
@@ -39,6 +40,7 @@ function Timer({ player, start, secs, handleMySecs }) {
 
   useEffect(() => {
     // console.log("updating your secs.", seconds);
+    // delete the room when chess clock reaches 0.
     handleMySecs(seconds);
     if (seconds <= 0) {
       socket.emit("time expired");
@@ -54,7 +56,7 @@ function Timer({ player, start, secs, handleMySecs }) {
   return (
     <h1 style={{ position: "relative" }}>
       <span>{player}</span>
-      <span style={{ position: "absolute", right: "0" }}>
+      <span style={{ position: "absolute", right: "0" }} className="timer">
         {formatTime(seconds)}
       </span>
     </h1>

@@ -178,6 +178,21 @@ body {
   /* text-shadow: 2px 2px 10px black; */
 }
 
+.show-user-disconnected {
+  text-align: "center";
+  color: "#fa2916";
+  height: "1rem";
+}
+.timer {
+  background-color: white;
+  border-radius: 2px;
+  letter-spacing: 2px;
+  padding: 2px;
+  width: 30%;
+  text-align: center;
+  color: black;
+}
+
 .chat-section {
   margin: auto;
 }
