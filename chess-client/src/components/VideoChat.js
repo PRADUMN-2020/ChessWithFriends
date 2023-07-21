@@ -82,14 +82,14 @@ const VideoChat = ({ user, roomId }) => {
         socket.off("signal");
       }
 
-      if (localStream.current) localStream.current.srcObject = null;
+      // if (localStream.current) localStream.current.srcObject = null;
 
-      if (mediaStream.current) {
-        mediaStream.current.getTracks().forEach((track) => track.stop());
-      }
+      // if (mediaStream.current) {
+      //   mediaStream.current.getTracks().forEach((track) => track.stop());
+      // }
 
       if (userType.current === "host") {
-        setTimeout(startChat, 2000);
+        setTimeout(startChat, 3000);
       } else {
         startChat();
       }
@@ -134,7 +134,7 @@ const VideoChat = ({ user, roomId }) => {
         });
     }
 
-    setTimeout(startChat, 1000); // start the video chat
+    setTimeout(startChat, 100); // start the video chat
 
     // Clean up resources on unmount
     return () => {

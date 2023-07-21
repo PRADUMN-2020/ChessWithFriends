@@ -42,13 +42,8 @@ const ChessboardComponent = ({ roomId, user }) => {
   const disconnector = useRef(null);
   const intervalId = useRef(null);
   const color = useRef(null);
-  const userType = useRef(user);
   const userId = localStorage.getItem("chessWithFriendsId");
   const audio = new Audio(moveSound);
-
-  useEffect(() => {
-    userType.current = user;
-  }, [user]);
 
   function isPromotion(move) {
     // to return weather the promotion is possible for the given move.
@@ -135,7 +130,7 @@ const ChessboardComponent = ({ roomId, user }) => {
         console.log("2) you color match with turn");
         setYourSecs(() => {
           const secs =
-            userType.current === "host"
+            player.user === "host"
               ? player.hostSeconds -
                 Math.floor((date - player.guestLastMove) / 1000)
               : player.guestSeconds -
@@ -145,9 +140,7 @@ const ChessboardComponent = ({ roomId, user }) => {
         });
         setOpponentSecs(() => {
           const secs =
-            userType.current === "host"
-              ? player.guestSeconds
-              : player.hostSeconds;
+            player.user === "host" ? player.guestSeconds : player.hostSeconds;
           console.log("opponenet secs", secs);
           return secs;
         });
@@ -155,15 +148,13 @@ const ChessboardComponent = ({ roomId, user }) => {
         console.log("2) your color dont match with turn");
         setYourSecs(() => {
           const secs =
-            userType.current === "host"
-              ? player.hostSeconds
-              : player.guestSeconds;
+            player.user === "host" ? player.hostSeconds : player.guestSeconds;
           console.log("your secs", secs);
           return secs;
         });
         setOpponentSecs(() => {
           const secs =
-            userType.current === "host"
+            player.user === "host"
               ? player.guestSeconds -
                 Math.floor((date - player.hostLastMove) / 1000)
               : player.hostSeconds -

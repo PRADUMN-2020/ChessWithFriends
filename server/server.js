@@ -132,6 +132,7 @@ io.on("connection", (socket) => {
             guestSeconds: room.guest.seconds,
             guestLastMove: room.guest.lastMove,
             turn: gameState.turn(),
+            user: activePlayers.get(socket.id).user,
           };
           console.log("reached host");
           socket.emit("started game", hostState);
@@ -150,6 +151,7 @@ io.on("connection", (socket) => {
             guestSeconds: room.guest.seconds,
             guestLastMove: room.guest.lastMove,
             turn: gameState.turn(),
+            user: activePlayers.get(socket.id).user,
           };
           console.log("reached guest");
           socket.emit("started game", guestState);
@@ -186,6 +188,7 @@ io.on("connection", (socket) => {
       guestSeconds: guest.seconds,
       guestLastMove: guest.lastMove,
       turn: gameState.turn(),
+      user: activePlayers.get(socket.id).user,
     };
     // set guestState
     const guestState = {
@@ -196,6 +199,7 @@ io.on("connection", (socket) => {
       guestSeconds: guest.seconds,
       guestLastMove: guest.lastMove,
       turn: gameState.turn(),
+      user: activePlayers.get(socket.id).user,
     };
     console.log("hostState", hostState);
     console.log("guestState", guestState);
