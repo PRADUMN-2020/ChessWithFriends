@@ -9,6 +9,9 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  AZURE_WEBAPP_PACKAGE_PATH: "./server"
+
 jobs:
   build:
     runs-on: windows-latest
@@ -23,7 +26,6 @@ jobs:
 
       - name: npm install, build, and test
         run: |
-          cd server
           npm install
           npm run build --if-present
           npm run test --if-present
@@ -32,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: server
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
@@ -54,4 +56,4 @@ jobs:
           app-name: "chesswithfriends"
           slot-name: "Production"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0BF88FB11B7F4575BB59A013EC077CF9 }}
-          package: server
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
