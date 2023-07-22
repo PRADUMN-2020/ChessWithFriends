@@ -53,4 +53,4 @@ jobs:
           app-name: 'chesswithfriends'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DA7CE8464FB04EBEA2863B4826B81549 }}
-          package: .
+          package: ./server
