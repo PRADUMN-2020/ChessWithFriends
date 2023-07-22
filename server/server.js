@@ -290,8 +290,16 @@ io.on("connection", (socket) => {
           } else {
             verdict = "1 - 0 Black Checkmate White Wins";
           }
+        } else if (game.isDraw()) {
+          if (game.isInsufficientMaterial())
+            verdict = "1/2 - 1/2 Draw, Insufficient Material";
+          else verdict = "1/2 - 1/2 Draw, 50 move rule";
+        } else if (game.isStalemate()) {
+          verdict = "1/2 - 1/2 Draw, Stale Mate";
+        } else if (game.isThreefoldRepetition()) {
+          verdict = "1/2 - 1/2 Draw, Threefold Repetition";
         } else {
-          verdict = "1/2 - 1/2 Game is a Draw";
+          verdict = "1/2 - 1/2 Draw";
         }
       }
     }

@@ -67,7 +67,8 @@ const VideoChat = ({ user, roomId }) => {
         peerRef.current = null;
       }
       console.log("idhar aya.");
-
+      setMute(false);
+      setCameraOff(false);
       if (localStream.current) localStream.current.srcObject = null;
 
       if (mediaStream.current) {
