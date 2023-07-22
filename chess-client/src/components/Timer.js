@@ -16,6 +16,15 @@ function Timer({ player, start, secs, handleMySecs }) {
   }, [secs]);
 
   useEffect(() => {
+    socket.on("delete peer", () => {
+      if (timeId.current !== null) {
+        clearInterval(timeId.current);
+        timeId.current = null;
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     // console.log("work hard.");
     // to handle start stop of chess clock.
     if (start && seconds > 0) {
@@ -49,12 +58,6 @@ function Timer({ player, start, secs, handleMySecs }) {
       }
       socket.emit("time expired");
     }
-    socket.on("delete peer", () => {
-      if (timeId.current !== null) {
-        clearInterval(timeId.current);
-        timeId.current = null;
-      }
-    });
   }, [seconds]);
 
   return (
