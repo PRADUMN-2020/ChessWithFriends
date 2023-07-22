@@ -56,7 +56,7 @@ function Timer({ player, start, secs, handleMySecs }) {
         clearInterval(timeId.current);
         timeId.current = null;
       }
-      socket.emit("time expired");
+      socket.emit("time expired", player);
     }
   }, [seconds]);
 

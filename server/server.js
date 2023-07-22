@@ -415,11 +415,16 @@ io.on("connection", (socket) => {
 
   // to handle timer expiration.
 
-  socket.on("time expired", () => {
+  socket.on("time expired", (player) => {
     if (activePlayers.has(socket.id)) {
-      const looserSocketId = socket.id;
-      const roomId = activePlayers.get(looserSocketId).roomId;
-      const looser = activePlayers.get(looserSocketId).user;
+      const socketId = socket.id;
+      const roomId = activePlayers.get(socketId).roomId;
+      const looser =
+        player === "You"
+          ? activePlayers.get(socketId).user
+          : activePlayers.get(socketId).user === "host"
+          ? "guest"
+          : "host";
       const looserColor = rooms.get(roomId)[looser].color;
       let verdict =
         looserColor !== "white"
