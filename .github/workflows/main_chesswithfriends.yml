@@ -9,9 +9,6 @@ on:
       - main
   workflow_dispatch:
 
-env:
-  AZURE_WEBAPP_PACKAGE_PATH: "./server"
-
 jobs:
   build:
     runs-on: windows-latest
@@ -56,4 +53,4 @@ jobs:
           app-name: "chesswithfriends"
           slot-name: "Production"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0BF88FB11B7F4575BB59A013EC077CF9 }}
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          package: ./server
