@@ -25,13 +25,13 @@ function Timer({ player, start, secs, handleMySecs }) {
         });
       }, 1000);
     } else {
-      if (timeId.current !== null) {
+      if (timeId.current) {
         clearInterval(timeId.current);
         timeId.current = null;
       }
     }
     return () => {
-      if (timeId.current) {
+      if (timeId.current !== null) {
         clearInterval(timeId.current);
         timeId.current = null;
       }
@@ -43,6 +43,10 @@ function Timer({ player, start, secs, handleMySecs }) {
     // delete the room when chess clock reaches 0.
     handleMySecs(seconds);
     if (seconds <= 0) {
+      if (timeId.current) {
+        clearInterval(timeId.current);
+        timeId.current = null;
+      }
       socket.emit("time expired");
     }
     socket.on("delete peer", () => {
