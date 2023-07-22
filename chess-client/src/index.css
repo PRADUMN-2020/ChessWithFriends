@@ -179,9 +179,9 @@ body {
 }
 
 .show-user-disconnected {
-  text-align: "center";
-  color: "#fa2916";
-  height: "1rem";
+  text-align: center;
+  color: #fa2916;
+  height: 1rem;
 }
 .timer {
   background-color: white;
