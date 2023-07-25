@@ -31,19 +31,16 @@ This app aims to lets people enjoy the game of chess regardless of any geographi
 ## Screenshots📸
 
 1. Initial Page Desktop view:
-   <p alight="centre">
-   <img src="chess-client/public/assets/pieces/initial-page-pc.png" height="800p" title="hover text">
-   </p>
-2. Initial Page Mobile view:
-   <p alight="centre">
-   <img src="chess-client/public/assets/pieces/initial-page-mobile.png" height="800" title="hover text">
-  </p>
-   
-5. Game Room Desktop view:
-   ![Desktop View](chess-client/public/assets/pieces/initial-page-pc.png)
+    ![Desktop View](chess-client/public/assets/pieces/initial-page-pc.png)
 
-6.  Game Room Mobile View:
-   ![Mobile View](chess-client/public/assets/pieces/initial-page-pc.png)
+2. Initial Page Mobile view:
+   ![Mobile View](chess-client/public/assets/pieces/initial-page-mobile.png)
+   
+3. Game Room Desktop view:
+   ![Desktop View](chess-client/public/assets/pieces/game-room-pc-view.png)
+
+4.  Game Room Mobile View:
+   ![Mobile View](chess-client/public/assets/pieces/game-room-mobile-view.png)
 
 ## Deployment🚀
 
