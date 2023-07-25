@@ -30,18 +30,25 @@ This app aims to lets people enjoy the game of chess regardless of any geographi
 
 ## Screenshots📸
 
-1. Initial Page Desktop view:
-    ![Desktop View](chess-client/public/assets/pieces/initial-page-pc.png)
+### 1. Initial Page Desktop view:
+<div align="center">
+  <img src="chess-client/public/assets/pieces/initial-page-pc.png" alt="desktop view" width="500px">
+</div>
 
-2. Initial Page Mobile view:
-   ![Mobile View](chess-client/public/assets/pieces/initial-page-mobile.png)
+### 2. Initial Page Mobile view:
+<div align="center">
+  <img src="chess-client/public/assets/pieces/initial-page-mobile.png" alt="mobile view" width="400px">
+</div>
    
-3. Game Room Desktop view:
-   ![Desktop View](chess-client/public/assets/pieces/game-room-pc-view.png)
+### 3. Game Room Desktop view:
+<div align="center">
+  <img src="chess-client/public/assets/pieces/game-room-pc-view.png" alt="desktop view" width="500px">
+</div>
 
-4.  Game Room Mobile View:
-   ![Mobile View](chess-client/public/assets/pieces/game-room-mobile-view.png)
-
+### 4. Game Room Mobile View:
+<div align="center">
+  <img src="chess-client/public/assets/pieces/game-room-mobile-view.png" alt="mobile view" width="400px">
+</div>
 ## Deployment🚀
 
 The web application is deployed and accessible, Check the live link here [Deployment Link](https://chesswithfriends.vercel.app/).
