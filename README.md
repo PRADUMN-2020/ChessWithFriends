@@ -49,6 +49,8 @@ This app aims to lets people enjoy the game of chess regardless of any geographi
 <div align="center">
   <img src="chess-client/public/assets/pieces/game-room-mobile-view.png" alt="mobile view" width="300px">
 </div>
+
+
 ## Deployment🚀
 
 The web application is deployed and accessible, Check the live link here [Deployment Link](https://chesswithfriends.vercel.app/).
