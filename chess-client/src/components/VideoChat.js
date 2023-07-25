@@ -61,14 +61,15 @@ const VideoChat = ({ user, roomId }) => {
     socket.on("delete peer", () => {
       // deleted.current = true; // room deleted
       // console.log("room deleted ", deleted.current);
+      if (mute) setMute(false);
+      if (cameraOff) setCameraOff(false);
       if (peerRef.current) {
         socket.off("signal");
         peerRef.current.destroy();
         peerRef.current = null;
       }
       console.log("idhar aya.");
-      setMute(false);
-      setCameraOff(false);
+
       if (localStream.current) localStream.current.srcObject = null;
 
       if (mediaStream.current) {
