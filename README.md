@@ -32,7 +32,7 @@ This app aims to lets people enjoy the game of chess regardless of any geographi
 
 1. Initial Page Desktop view:
    <p alight="centre">
-   <img src="./client/public/assets/pieces/initial-page-pc.png" width="350" title="hover text">
+   <img src="https://github.com/PRADUMN-2020/ChessWithFriends/blob/main/client/public/assets/pieces/initial-page-pc.png" width="350" title="hover text">
    </p>
 2. Initial Page Mobile view:
    <p alight="centre">
