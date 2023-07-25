@@ -37,7 +37,7 @@ This app aims to lets people enjoy the game of chess regardless of any geographi
 
 ### 2. Initial Page Mobile view:
 <div align="center">
-  <img src="chess-client/public/assets/pieces/initial-page-mobile.png" alt="mobile view" width="400px">
+  <img src="chess-client/public/assets/pieces/initial-page-mobile.png" alt="mobile view" width="300px">
 </div>
    
 ### 3. Game Room Desktop view:
@@ -47,7 +47,7 @@ This app aims to lets people enjoy the game of chess regardless of any geographi
 
 ### 4. Game Room Mobile View:
 <div align="center">
-  <img src="chess-client/public/assets/pieces/game-room-mobile-view.png" alt="mobile view" width="400px">
+  <img src="chess-client/public/assets/pieces/game-room-mobile-view.png" alt="mobile view" width="300px">
 </div>
 ## Deployment🚀
 
