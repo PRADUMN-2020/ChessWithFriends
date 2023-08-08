@@ -16,7 +16,7 @@ This app aims to lets people enjoy the game of chess regardless of any geographi
 ### Features🛠️
 
 - Feature 1: Real time video chat.🎥👥
-- Feature 2: Fully Responsive across all websites.📱💻
+- Feature 2: Fully Responsive across all devices.📱💻
 - Feature 3: Seperate Game Rooms to for multiple games simultaneously.🏰👥
 - Feature 4: 10 Min chess timer, fully synchronysed at both clients and server.⏱️🔄
 - Feature 5: Robust architecture to handle disconnections and preserve game state.🏗️💾
