@@ -17,8 +17,8 @@ along with Chess With Friends. If not, see <https://www.gnu.org/licenses/>.
 import React, { useState, useEffect, useRef } from "react";
 import socket from "../socketLogic";
 function Timer({ player, start, secs, handleMySecs }) {
-  const [seconds, setSeconds] = useState(secs);
   const timeId = useRef(null);
+  const [seconds, setSeconds] = useState(secs);
 
   function formatTime(seconds) {
     const min = Math.floor(seconds / 60);
