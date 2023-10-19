@@ -28,7 +28,7 @@ const server = http.createServer(app); // create http server using express app
 const io = Server(server); // create socket io server using http server
 
 function findKing(color, game) {
-  // to give the position of king
+  // to give the position of the king
   for (let rank = 0; rank < 8; rank++) {
     for (let file = 0; file < 8; file++) {
       const square = String.fromCharCode(97 + file) + (rank + 1);
